@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
     <meta name="author" content="Creative Tim">
     <title>@yield('title')</title>
@@ -15,16 +16,19 @@
     @guest
     
     @if (Route::has('register'))
-    <div class="main-content">
-        @include('components.content')
-    </div>
+        <div class="main-content">
+            @include('components.content')
+        </div>
     @endif
     @else
-    @include('components.nav')
-
-    <div class="main-content">
-        @include('components.content')
-    </div>
+        @if(auth()->user()->logged_flag!=0)
+            @include('components.nav')
+        @endif
+        <div class="main-content">
+            
+            @include('components.content')
+        </div>
+        
     @endguest
 
 

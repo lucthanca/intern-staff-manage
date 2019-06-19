@@ -28,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -49,9 +49,21 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'min:8', 'max:16','unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ],[
+            'username.required'=>'Tên đăng nhập không được để trống',
+            'username.min'=>'Độ dài tối thiểu :min ký tự',
+            'username.max'=>'Độ dài tối đa :max ký tự',
+            'username.unique'=>'Tênn đăng nhập đã tồn tại trong hệ thống',
+            'email.required'=>':attributes không được để trống',
+            'email.email'=>'Hãy nhập đúng định dạng mail',
+            'email.max'=>'Độ dài tối đa :max ký tự',
+            'email.unique'=>':attributes đã tồn tại trong hệ thống',
+            'password.required'=>'Không nhập mật khẩu là không được đâu ra',
+            'password.min'=>'Độ dài mật khẩu tối thiểu :min ký tự nhé',
+            'password.confirmed'=>'Mật khẩu xác nhận không khớp',
         ]);
     }
 
@@ -59,12 +71,12 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return \App\Models\User
      */
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);

@@ -11,8 +11,14 @@
 |
 */
 
-Route::get('/', 'User\RootController@index');
 
 Auth::routes();
+
+Route::group(['namespace'=>'User'],function(){
+    Route::get('/', 'RootController@index');
+    Route::get('/staff/','RootController@StaffIndex')->name('root.staff.index');
+    Route::get('new-staff', 'RootController@create');
+    Route::post('store-staff', 'RootController@store')->name('root.store');
+});
 
 Route::get('/home', 'HomeController@index')->name('home');

@@ -15,10 +15,10 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
-
+    // protected $fillable = [
+    //     'username', 'email', 'password',
+    // ];
+        protected $guarded = [];
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -36,4 +36,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(
+            function ($user) {
+                if(!$user->name) {
+                    $user->update([
+                        'name' => $user->username,
+                    ]);
+                }
+            }
+        );
+    }
+
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class)->withPivot('permission')->withTimestamps();
+    }
 }
