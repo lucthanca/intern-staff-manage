@@ -1,0 +1,10 @@
+@font-face {
+  font-family: "Font Awesome 5 Free";
+  src: url(../assets/vendor/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf) format("ttf"), url(../assets/vendor/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2) format("woff2"), url(../assets/vendor/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff) format("woff"); }
+tbody tr:hover {
+  background: #686de459; }
+
+.pagination .disabled {
+  cursor: not-allowed; }
+
+/*# sourceMappingURL=ltc.css.map */

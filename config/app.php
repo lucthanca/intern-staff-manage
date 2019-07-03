@@ -161,6 +161,9 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Tightenco\Ziggy\ZiggyServiceProvider::class,
+        Fedeisas\LaravelMailCssInliner\LaravelMailCssInlinerServiceProvider::class,
+        \Eduardokum\LaravelMailAutoEmbed\ServiceProvider::class,
 
         /*
          * Package Service Providers...

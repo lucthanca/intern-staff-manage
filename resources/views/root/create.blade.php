@@ -52,7 +52,7 @@
     }
 
     .avatar-wrapper .profile-pic:after {
-        font-family: 'FontAwesome5';
+        font-family: 'Font Awesome 5 Free';
         content: "\f007";
         top: 0;
         left: 0;
@@ -116,15 +116,12 @@
                 reader.onload = function(e) {
                     $('.profile-pic').attr('src', e.target.result);
                 }
-
                 reader.readAsDataURL(input.files[0]);
             }
         }
-
         $(".file-upload").on('change', function() {
             readURL(this);
         });
-
         $(".upload-button").on('click', function() {
             $(".file-upload").click();
         });
@@ -172,8 +169,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                                         </div>
-                                        <input pattern="^[a-z][a-z0-9_\.]{2,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$"
-                                            name="email" class="form-control" placeholder="Email" type="email" value="{{ old('email') }}">
+                                        <input pattern="^[a-z][a-z0-9_\.]{2,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$" name="email" class="form-control" placeholder="Email" type="email" value="{{ old('email') }}">
                                     </div>
                                     <small id="helpId" class="form-text text-muted pl-3 pr-3 text-light-blue"> &rsaquo; Email bắt đầu bằng chữ cái từ 3 đến 32 ký tự, tên miền có thể là cấp 1 hoặc cấp 2</small>
                                     @error('email')
@@ -222,7 +218,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                         </div>
-                                        <input name="birthday" class="form-control datepicker" placeholder="Chọn ngày sinh" type="text" value="{{ old('birthday') }}">
+                                        <input readonly name="birthday" class="form-control datepicker" placeholder="Chọn ngày sinh" type="text" value="{{ old('birthday') }}">
                                     </div>
                                 </div>
 
@@ -271,9 +267,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 col-md-12 pt-3 text-center">
-
                         <a class="btn btn-secondary" href="/staff/"> Trở lại</a>
-
                         <button class="btn btn-icon btn-3 btn-primary" type="submit">
                             <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
                             <span class="btn-inner--text"> Thêm</span>

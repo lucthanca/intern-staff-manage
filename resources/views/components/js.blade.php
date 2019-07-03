@@ -1,12 +1,13 @@
 <!-- Argon Scripts -->
 <!-- Core -->
-<script src="{{ asset('./assets/vendor/jquery/dist/jquery.min.js') }}"></script>
-<script src="{{ asset('./assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('./assets/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('./assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('./assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('./assets/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('./assets/vendor/bootstrap-datepicker/dist/locales/bootstrap-datepicker.vi.min.js') }}" charset="UTF-8"></script>
+<script type="text/javascript" src="{{ asset('./assets/plugins/sweetalert2.all.min.js') }}"></script>
 <script>
     $('.datepicker').datepicker({
-        format: 'dd/mm/yyyy',
+        format: 'yyyy/mm/dd',
         endDate: 'today',
         language: 'vi'
     });

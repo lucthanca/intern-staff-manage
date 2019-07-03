@@ -105,33 +105,13 @@
                 @if(!Gate::denies('view-staff-manage'))
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('root.staff.index') }}">
-                            <i class="fas fa-users text-blue"></i> Staff Management
+                            <i class="fas fa-users text-blue"></i> Nhân viên
                         </a>
                     </li>
                 @endif
                 <li class="nav-item">
                     <a class="nav-link" href="./examples/maps.html">
-                        <i class="fas fa-building text-orange"></i></i> Department Management
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./examples/profile.html">
-                        <i class="ni ni-single-02 text-yellow"></i> User profile
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./examples/tables.html">
-                        <i class="ni ni-bullet-list-67 text-red"></i> Tables
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./examples/login.html">
-                        <i class="ni ni-key-25 text-info"></i> Login
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./examples/register.html">
-                        <i class="ni ni-circle-08 text-pink"></i> Register
+                        <i class="fas fa-building text-orange"></i></i> Phòng ban
                     </a>
                 </li>
             </ul>

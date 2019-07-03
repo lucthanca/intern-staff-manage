@@ -21,11 +21,10 @@
         </div>
     @endif
     @else
-        @if(auth()->user()->logged_flag!=0)
+        @if(auth()->user()->logged_flag!=0 && auth()->user()->logged_flag!=-1)
             @include('components.nav')
         @endif
         <div class="main-content">
-            
             @include('components.content')
         </div>
         

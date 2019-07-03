@@ -30,45 +30,57 @@
                 </div>
             </div>
             <!-- Navbar items -->
+            @if(Auth::user() && Auth::user()->role != 1)
             <ul class="navbar-nav ml-auto">
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link nav-link-icon" href="../index.html">
-                        <i class="ni ni-planet"></i>
-                        <span class="nav-link-inner--text">Dashboard</span>
-                    </a>
-                </li> -->
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link nav-link-icon" href="../examples/register.html">
-                        <i class="ni ni-circle-08"></i>
-                        <span class="nav-link-inner--text">Register</span>
-                    </a>
-                </li> -->
-                <!-- <li class="nav-item">
-                    <a class="nav-link nav-link-icon" href="../examples/login.html">
-                        <i class="ni ni-key-25"></i>
-                        <span class="nav-link-inner--text">Login</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-icon" href="../examples/profile.html">
-                        <i class="ni ni-single-02"></i>
-                        <span class="nav-link-inner--text">Profile</span>
-                    </a>
-                </li> -->
+                <ul class="navbar-nav align-items-center d-none d-md-flex">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="media align-items-center">
+                                <span class="avatar avatar-sm rounded-circle">
+                                    <img alt="Image placeholder" src="{{ asset('../assets/img/theme/profile.png') }}">
+                                </span>
+                                <div class="media-body ml-2 d-none d-lg-block">
+                                    <span class="mb-0 text-sm  font-weight-bold">{{ Auth::user()->username }}</span>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+                            <div class=" dropdown-header noti-title">
+                                <h6 class="text-overflow m-0">Chào mừng {{ Auth::user()->username }}
+                                    <</h6> </div> <div class="dropdown-divider">
+                            </div>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                            <a href="javascript:void(0)" class="dropdown-item" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                <i class="ni ni-user-run"></i>
+                                <span>Đăng xuất</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
             </ul>
+            @endif
         </div>
     </div>
 </nav>
 <!-- Header -->
-<div class="header bg-gradient-primary py-7 py-lg-8">
+<div class="header bg-gradient-primary py-5">
     <div class="container">
         <div class="header-body text-center mb-7">
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-6">
-                    <h1 class="text-white">Xin chào - {{ auth()->user()->name }}</h1>
-                    <p class="text-lead text-light">Vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
+                    @if(Auth::user() && Auth::user()->role != 1)
+                        <h1 class="text-white py-sm-5">Xin chào - {{ auth()->user()->name }}</h1>
+                        @if($status == 0)
+                            <p class="text-lead text-light">Lần đầu đăng nhập, bạn hãy vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
+                        @else
+                            <p class="text-lead text-light">Bạn có yêu cầu khôi phục mật khẩu từ root, vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
+                        @endif
+                    @else
+                        <h1 class="text-white py-3">Xin chào bạn nhaaaaaa!</h1>
+                        <p class="text-lead text-light py-5">Bạn có yêu cầu khôi phục mật khẩu từ root, vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
+                    @endif
                 </div>
             </div>
         </div>
@@ -84,29 +96,13 @@
     <div class="row justify-content-center">
         <div class="col-lg-5 col-md-7">
             <div class="card bg-secondary shadow border-0">
-                <!-- Sign with social 
-                //
-                 <div class="card-header bg-transparent pb-5">
-                    <div class="text-muted text-center mt-2 mb-3"><small>Sign in with</small></div>
-                    <div class="btn-wrapper text-center">
-                        <a href="#" class="btn btn-neutral btn-icon">
-                            <span class="btn-inner--icon"><img src="../assets/img/icons/common/github.svg"></span>
-                            <span class="btn-inner--text">Github</span>
-                        </a>
-                        <a href="#" class="btn btn-neutral btn-icon">
-                            <span class="btn-inner--icon"><img src="../assets/img/icons/common/google.svg"></span>
-                            <span class="btn-inner--text">Google</span>
-                        </a>
-                    </div>
-                </div> 
-                //
-                // -->
                 <div class="card-body px-lg-5 py-lg-5">
                     <div class="text-center text-muted mb-4">
                         <small>hãy cập nhật mật khẩu mới</small>
                     </div>
-                    <form role="form" method="post" action="{{ route('resetPassword') }}">
+                    <form role="form" method="post" action="{{ $status == 0  ? route('resetPasswordFirst') : route('resetAPswd') }}">
                         @csrf
+                        <input type="hidden" name = "token" value="{{ $token ?? null }}">
                         <div class="form-group mb-3">
                             <div class="input-group input-group-alternative">
                                 <div class="input-group-prepend">
@@ -129,31 +125,11 @@
                                 <input class="form-control @error('password') is-invalid @enderror" placeholder="Xác nhận lại mật khẩu" type="password" name="password_confirmation" id="password-confirm" required autocomplete="new-password">
                             </div>
                         </div>
-                        <!-- Remember
-                            //
-                            //
-                        <div class="custom-control custom-control-alternative custom-checkbox">
-                            <input class="custom-control-input" id=" customCheckLogin" type="checkbox">
-                            <label class="custom-control-label" for=" customCheckLogin">
-                                <span class="text-muted">Remember me</span>
-                            </label>
-                        </div>
-                        //
-                        //
-                            -->
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary my-4">Đăng nhập</button>
+                            <button type="submit" class="btn btn-primary my-4">Đổi mật khẩu</button>
                         </div>
                     </form>
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-6">
-                    <a href="#" class="text-light"><small>Quên mật khẩu?</small></a>
-                </div>
-                <!-- <div class="col-6 text-right">
-                    <a href="#" class="text-light"><small>Create new account</small></a>
-                </div> -->
             </div>
         </div>
     </div>

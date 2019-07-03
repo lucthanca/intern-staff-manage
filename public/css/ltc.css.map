@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AACA,UAKC;EAJC,WAAW,EAAE,qBAAqB;EAClC,GAAG,EAAE,iSAE4F;AAK3F,cAAQ;EACJ,UAAU,EAAE,SAAS;;AAIjC,qBAAsB;EAClB,MAAM,EAAE,WAAW",
+"sources": ["ltc.scss"],
+"names": [],
+"file": "ltc.css"
+}
