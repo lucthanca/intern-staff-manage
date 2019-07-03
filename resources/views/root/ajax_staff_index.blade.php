@@ -1,4 +1,4 @@
-<div class="table-responsive" page="{{ $page ?? 1 }}">
+<div style="overflow: initial !important;" class="table-responsive" page="{{ $page ?? 1 }}">
     <table id="dataTable" class="table align-items-center table-dark table-flush">
         @if($staffs->isEmpty())
         <h1>Không có bản ghi nào</h1>
@@ -25,7 +25,7 @@
             <tr><a href="#">
                     <td style="width: 1px;">
                         <div class=" checkbox checkbox-success" style="padding: 0;">
-                            <input id="checkbox-{{ $staff->id }}" class="styled" type="checkbox">
+                            <input data-id="{{ $staff->id }}" id="checkbox-{{ $staff->id }}" class="styled chkbox" type="checkbox">
                             <label for="checkbox-{{ $staff->id }}"></label>
                         </div>
                     </td>
@@ -53,7 +53,7 @@
                                 <i class="fas fa-ellipsis-v"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                <a href="/rs-pw/{{ $staff->id }}" class="dropdown-item">Khôi phục mật khẩu</a>
+                                <a href="javascript:void(0);" class="dropdown-item _resetPassword" data-id="{{ $staff->id }}">Khôi phục mật khẩu</a>
                                 <a class="dropdown-item" href="/edit/{{ $staff->id }}">Sửa</a>
                                 <a class="dropdown-item _deleteA_Staff" href="javascript:void(0);" data-id="{{ $staff->id }}">Xoá</a>
                             </div>

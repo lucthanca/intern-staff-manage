@@ -20,3 +20,4 @@
 @yield('js')
 <!-- Argon JS -->
 <script src="{{ asset('./assets/js/argon.js?v=1.0.0') }}"></script>
+<script src="{{ asset('/js/ltc.js') }}"></script>

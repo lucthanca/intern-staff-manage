@@ -23,11 +23,15 @@ Route::group(['namespace' => 'User'], function () {
     Route::get('edit/{user}', 'RootController@edit');
     Route::post('update', 'RootController@update')->name('root.update');
     Route::post('destroy', 'RootController@deleteA')->name('root.deleteA');
+    Route::post('multi-delete','RootController@multiDelete')->name('multiDelete');
+
     Route::get('ajaxLoadStaff','RootController@ajaxLoadStaff')->name('ajaxLoadStaff');
 
-    Route::get('rs-pw/{user}','RootController@sendEmailReset');
+    Route::post('rs-pw/','RootController@sendEmailReset')->name('sendEmailReset');
     Route::get('reset-password/{token}','RootController@showFormResetPassword');
     Route::post('resetAPswd','RootController@resetPswd')->name('resetAPswd');
+
+    Route::post('rs-multi-pw/','RootController@sendMultiEmailReset')->name('sendMultiEmailReset');
 });
 
 Route::get('/home', 'HomeController@index')->name('home');

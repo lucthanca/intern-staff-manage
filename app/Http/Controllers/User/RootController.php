@@ -334,29 +334,130 @@ class RootController extends Controller
     public function deleteA()
     {
         $user = User::find(request('id'));
-        if ($user->delete())
+        if ($user) {
+            if ($user->delete())
+                return response()->json([
+                    'status' => 'success',
+                    // Đẩy page về view
+                    'page' => request('page'),
+                ]);
             return response()->json([
-                'status' => 'success',
+                'status' => 'failed',
                 // Đẩy page về view
                 'page' => request('page'),
             ]);
+        }
+    }
+
+    // Xoá nhiều nhân viên
+    public function multiDelete()
+    {
+        // danh sách mảng id
+        $ids = request('ids');
+        // lỗi
+        $errors = [];
+        foreach ($ids as $id) {
+            $user = User::find($id);
+            if ($user) {
+                $rs = $this->deleteUser($user);
+                if ($rs == 0) {
+                    array_push($errors, $user->id);
+                }
+            }
+        }
+        if (count($errors) == count($ids)) {
+            return response()->json([
+                'status' => 'failed',
+                // Đẩy page về view
+                'page' => request('page'),
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'fail',
+                // Đẩy page về view
+                'page' => request('page'),
+                // đẩy danh sách lỗi nếu có
+                'errors' => $errors,
+            ]);
+        }
+    }
+
+    // Hàm xoá nhân viên
+    public function deleteUser($user)
+    {
+        if ($user->delete())
+            return 1;
+        return 0;
     }
 
     // Gửi email reset mật khẩu
-    public function sendEmailReset(User $user)
+    public function sendEmailReset()
+    {
+        $user = User::find(request('id'));
+        // Nếu tìm được user
+        if ($user) {
+            // Gọi hàm gửi mail
+            $result = $this->sendMailTo($user);
+            if ($result == 1) {
+                return response()->json([
+                    'status' => 'true',
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'false',
+                    'user' => $result,
+                ]);
+            }
+        }
+        // return view('emails.resetPassword-email');
+    }
+
+    public function sendMultiEmailReset()
+    {
+        $errors = [];
+        // Lấy danh sách id
+        $ids = request('ids');
+        foreach ($ids as $id) {
+            $user = User::find($id);
+            // Nếu tìm được user
+            if ($user) {
+                // Gọi hàm gửi mail
+                $result = $this->sendMailTo($user);
+                dd($result);
+                if ($result != 1) {
+                    array_push($errors, $result);
+                }
+            }
+        }
+        if (count($errors) == count($ids)) {
+            return response()->json([
+                'status' => 'false',
+            ]);
+        }
+        return response()->json([
+            'status' => 'true',
+            'errors' => $errors,
+        ]);
+    }
+
+    // chức năng gửi mail
+    public function sendMailTo($user)
     {
         $passwordReset = PasswordReset::updateOrCreate([
             'email' => $user->email,
             'token' => Str::random(60),
         ]);
+        // Nếu tạo thành công token
         if ($passwordReset) {
+            // set trạng thái đăng nhập về -1 -reset pass
             $user->logged_flag = -1;
             $user->save();
+            // Gửi mail đến user
             Mail::to($user->email, $user->name)
                 ->send(new ResetPasswordMail($user, $passwordReset->token));
+            // Trả kq 
+            return 1;
         }
-
-        return redirect('/staff/');
-        // return view('emails.resetPassword-email');
+        return $user->id;
     }
 }
