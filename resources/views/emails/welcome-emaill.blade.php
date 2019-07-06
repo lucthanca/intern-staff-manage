@@ -398,7 +398,6 @@
                         <div class="col-lg-5 col-md-6" style="margin-top: 15px;">
                             <h1 class="text-white">Xin chào bạn {{ $user->name ?? null }}!</h1>
                             <p style="color: #ced4da !important;">Tài khoản của bạn đã được tạo bởi root.</p>
-                            <!-- <a href="{{ asset('/reset-password/'.$token) }}" class="large green button">Truy cập</a> -->
                             <p style="color: #ced4da !important;margin-top: 15px;">Mật khẩu của bạn là</p>
                             <strong style="color: #ced4da !important;color:#fff !important;font-size: 30px">{{ $password }}</strong>
                             <p style="color: #ced4da !important;margin-top: 15px;">Vui lòng đổi mật khẩu lần đầu đăng nhập nhé!</p>

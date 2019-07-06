@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Mail;
 use App\PasswordReset;
 use App\Mail\ResetPasswordMail;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
+use App\Department;
 
 class RootController extends Controller
 {
@@ -198,6 +200,63 @@ class RootController extends Controller
      */
     public function store()
     {
+        $user = User::withTrashed()->where('email', request('email'))->first();
+        if ($user->trashed()) {
+            $user->restore();
+            $data = request()->validate(
+                [
+                    'username' => ['required', 'string', 'max:32', 'unique:users,username,' . $user->id, 'min:3'],
+                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+                    'password' => ['required', 'string', 'min:8', 'max:255'],
+                ],
+                [
+                    'username.required' => ':attribute không được để trống',
+                    'username.min' => ':attributes tối thiểu :min ký tự',
+                    'username.max' => ':attributes chỉ được tối đa :max ký tự',
+                    'username.unique' => ':attributes đã tồn tại trong hệ thống',
+                    'email.required' => ':attribute không được để trống',
+                    'email.email' => 'Hãy nhập đúng định dạng là email',
+                    'email.max' => ':attributes nhận tối đa :max ký tự',
+                    'email.unique' => ':attributes đã tồn tại trong hệ thống',
+                    'password.required' => ':attribute không được để trống',
+                    'password.min' => ':attributes tối thiểu :min ký tự',
+                    'password.max' => ':attributes tối đa :max ký tự'
+                ],
+                [
+                    'username' => 'Tên đăng nhập',
+                    'email' => 'Email',
+                    'password' => 'Mật khẩu'
+                ]
+            );
+            if ($user->image) {
+                Storage::delete('/storage/' . $user->image);
+            }
+            // Nếu up ảnh thì thêm
+            if (request()->has('image')) {
+                $imagePath = request()->image->store('uploads', 'public');
+                $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000);
+                $image->save();
+                $imageArray = ['image' => $imagePath];
+            }
+            try {
+                $user->update([
+                    'username' => $data['username'],
+                    'password' => Hash::make($data['password']),
+                    'name' => request()->name ?? null,
+                    'birthday' => request()->birthday ?? null,
+                    'address' => request()->address ?? null,
+                    'city' => request()->city ?? null,
+                    'image' => $imageArray['image'] ?? null,
+                    'phone' => request()->phone ?? null,
+                    'logged_flag' => 0,
+                ]);
+                $password = request()->password;;
+                Mail::to($user->email)->send(new NewStaff($password, $user));
+                return redirect('/staff');
+            } catch (Exception $e) {
+                Storage::delete('/public/' . $imageArray['image']);
+            }
+        }
         $data = request()->validate(
             [
                 'username' => ['required', 'string', 'max:32', 'unique:users', 'min:3'],
@@ -223,28 +282,35 @@ class RootController extends Controller
                 'password' => 'Mật khẩu'
             ]
         );
+        $user = User::where('email', $data['email'])->first();
+
+
         if (request()->has('image')) {
             $imagePath = request()->image->store('uploads', 'public');
             $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000);
             $image->save();
             $imageArray = ['image' => $imagePath];
         }
-        $user = User::updateOrCreate([
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'name' => request()->name ?? null,
-            'birthday' => request()->birthday ?? null,
-            'address' => request()->address ?? null,
-            'city' => request()->city ?? null,
-            'image' => $imageArray['image'] ?? null,
-            'phone' => request()->phone ?? null,
-        ]);
+        try {
+            $user = User::updateOrCreate([
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'name' => request()->name ?? null,
+                'birthday' => request()->birthday ?? null,
+                'address' => request()->address ?? null,
+                'city' => request()->city ?? null,
+                'image' => $imageArray['image'] ?? null,
+                'phone' => request()->phone ?? null,
+            ]);
 
-        if ($user) {
-            $password = request()->password;;
-            Mail::to($user->email)->send(new NewStaff($password));
-            return redirect('/staff');
+            if ($user) {
+                $password = request()->password;;
+                Mail::to($user->email)->send(new NewStaff($password, $user));
+                return redirect('/staff');
+            }
+        } catch (Exception $e) {
+            Storage::delete('/public/' . $imageArray['image']);
         }
     }
 
@@ -255,7 +321,9 @@ class RootController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(User $user)
-    { }
+    {
+        return view('root.profile', compact('user'));
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -265,7 +333,9 @@ class RootController extends Controller
      */
     public function edit(User $user)
     {
-        return view('root.edit', compact('user'));
+        if (auth()->user()->role == 1 || auth()->user()->id == $user->id)
+            return view('root.edit', compact('user'));
+        return abort(401);
     }
 
     /**
@@ -303,6 +373,9 @@ class RootController extends Controller
 
         );
         $user = User::find(request()->id);
+        if ($user->image) {
+            Storage::delete('/public/' . $user->image);
+        }
         if (request()->has('image')) {
             $imagePath = request()->image->store('uploads', 'public');
             $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000);

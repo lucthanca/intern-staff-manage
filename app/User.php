@@ -19,7 +19,7 @@ class User extends Authenticatable
     // protected $fillable = [
     //     'username', 'email', 'password',
     // ];
-        protected $guarded = [];
+    protected $guarded = [];
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -44,13 +44,21 @@ class User extends Authenticatable
 
         static::created(
             function ($user) {
-                if(!$user->name) {
+                if (!$user->name) {
                     $user->update([
                         'name' => $user->username,
                     ]);
                 }
             }
         );
+    }
+
+    /**
+     * @return avatar of user
+     */
+    public function getAvatar()
+    {
+        return $this->image ? '/storage/' . $this->image : '/img/no-user.png';
     }
 
     public function departments()

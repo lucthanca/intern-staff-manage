@@ -13,7 +13,7 @@ class CreatesUserDepartmentPivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_department', function (Blueprint $table) {
+        Schema::create('department_user', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('department_id');
@@ -29,6 +29,6 @@ class CreatesUserDepartmentPivotTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_department');
+        Schema::dropIfExists('department_user');
     }
 }

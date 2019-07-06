@@ -218,7 +218,7 @@
                                 <div class="form-group image-box">
                                     <div class="input-group input-group-alternative">
                                         <div class="avatar-wrapper">
-                                            <img class="profile-pic" src="{{ $user->image }}" />
+                                            <img class="profile-pic" src="/storage/{{ $user->image }}" />
                                             <div class="upload-button">
                                                 <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
                                             </div>

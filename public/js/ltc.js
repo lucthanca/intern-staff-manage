@@ -18,6 +18,7 @@ $(document).ready(function () {
     //
     // chọn tất cả **************
     $(document).on('change', '#checkboxAll', function () {
+        console.log(1);
         if ($(this).is(':checked')) {
             $.each($('.chkbox'), function () {
                 $(this).prop('checked', true);

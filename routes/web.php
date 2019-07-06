@@ -32,6 +32,8 @@ Route::group(['namespace' => 'User'], function () {
     Route::post('resetAPswd','RootController@resetPswd')->name('resetAPswd');
 
     Route::post('rs-multi-pw/','RootController@sendMultiEmailReset')->name('sendMultiEmailReset');
+
+    Route::get('profile/{user}','RootController@show');
 });
 
 Route::get('/home', 'HomeController@index')->name('home');

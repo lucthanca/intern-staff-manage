@@ -11,15 +11,16 @@ class NewStaff extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $password;
+    public $password,$user;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($password)
+    public function __construct($password,$user)
     {
         $this->password = $password;
+        $this->user = $user;
     }
 
     /**
