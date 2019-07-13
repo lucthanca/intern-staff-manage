@@ -47,8 +47,14 @@
                         <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
                             <div class=" dropdown-header noti-title">
                                 <h6 class="text-overflow m-0">Chào mừng {{ Auth::user()->username }}
-                                    <</h6> </div> <div class="dropdown-divider">
+                                </h6>
                             </div>
+                            <div class="dropdown-divider">
+                            </div>
+                            <a href="/profile/{{ auth()->user()->id }}" class="dropdown-item">
+                                <i class="ni ni-single-02"></i>
+                                <span>Trang cá nhân</span>
+                            </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
@@ -71,15 +77,15 @@
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-6">
                     @if(Auth::user() && Auth::user()->role != 1)
-                        <h1 class="text-white py-sm-5">Xin chào - {{ auth()->user()->name }}</h1>
-                        @if($status == 0)
-                            <p class="text-lead text-light">Lần đầu đăng nhập, bạn hãy vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
-                        @else
-                            <p class="text-lead text-light">Bạn có yêu cầu khôi phục mật khẩu từ root, vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
-                        @endif
+                    <h1 class="text-white py-sm-5">Xin chào - {{ auth()->user()->name }}</h1>
+                    @if($status == 0)
+                    <p class="text-lead text-light">Lần đầu đăng nhập, bạn hãy vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
                     @else
-                        <h1 class="text-white py-3">Xin chào bạn nhaaaaaa!</h1>
-                        <p class="text-lead text-light py-5">Bạn có yêu cầu khôi phục mật khẩu từ root, vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
+                    <p class="text-lead text-light">Bạn có yêu cầu khôi phục mật khẩu từ root, vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
+                    @endif
+                    @else
+                    <h1 class="text-white py-3">Xin chào bạn nhaaaaaa!</h1>
+                    <p class="text-lead text-light py-5">Bạn có yêu cầu khôi phục mật khẩu từ root, vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
                     @endif
                 </div>
             </div>
@@ -102,7 +108,7 @@
                     </div>
                     <form role="form" method="post" action="{{ $status == 0  ? route('resetPasswordFirst') : route('resetAPswd') }}">
                         @csrf
-                        <input type="hidden" name = "token" value="{{ $token ?? null }}">
+                        <input type="hidden" name="token" value="{{ $token ?? null }}">
                         <div class="form-group mb-3">
                             <div class="input-group input-group-alternative">
                                 <div class="input-group-prepend">

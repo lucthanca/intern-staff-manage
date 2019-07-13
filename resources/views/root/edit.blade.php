@@ -1,5 +1,8 @@
 @extends('master')
 
+@section('title')Chỉnh sửa - {{ $user->name }}
+@endsection
+
 @section('css')
 
 <style>
@@ -242,7 +245,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 col-md-12 pt-3 text-center">
-                        <a class="btn btn-secondary" href="/staff/"><span class="btn-inner--icon"><i class="fas fa-undo"></i></span> Trở lại</a>
+                        <a class="btn btn-secondary" href="{{ url()->previous() }}"><span class="btn-inner--icon"><i class="fas fa-undo"></i></span> Trở lại</a>
                         <button class="btn btn-icon btn-3 btn-primary" type="submit">
                             <span class="btn-inner--icon"><i class="far fa-save"></i></span>
                             <span class="btn-inner--text"> Lưu</span>

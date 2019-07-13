@@ -1,5 +1,8 @@
 @extends('master')
 
+@section('title')Đăng nhập
+@endsection
+
 @section('body-class')
 bg-default
 @endsection

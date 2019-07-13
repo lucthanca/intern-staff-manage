@@ -21,6 +21,6 @@ class LoginPolicy
 
     public function canLogin(User $user)
     {
-        return $user->logged_flag == 0;
+        return $user->logged_flag == 1;
     }
 }

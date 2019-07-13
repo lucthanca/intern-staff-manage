@@ -1,4 +1,4 @@
-<div style="overflow: initial !important;" class="table-responsive" page="{{ $page ?? 1 }}">
+<div class="table-responsive" page="{{ $page ?? 1 }}">
     <table id="dataTable" class="table align-items-center table-dark table-flush">
         @if($staffs->isEmpty())
         <h1>Không có bản ghi nào</h1>

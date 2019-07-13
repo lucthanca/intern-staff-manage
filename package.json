@@ -16,10 +16,14 @@
         "jquery": "^3.2",
         "laravel-mix": "^4.0.7",
         "lodash": "^4.17.5",
-        "popper.js": "^1.12",
+        "popper.js": "^1.15.0",
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.15.2",
         "sass-loader": "^7.1.0",
         "vue": "^2.5.17"
+    },
+    "dependencies": {
+        "moment": "^2.24.0",
+        "source-code-pro": "git://github.com/adobe-fonts/source-code-pro.git#release"
     }
 }

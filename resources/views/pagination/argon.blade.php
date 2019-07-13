@@ -1,5 +1,5 @@
 @if ($paginator->hasPages())
-<div class="card-footer py-4" style="background: #172b4d;border-top: 1px solid rgba(0, 0, 0, 0.4);">
+<div class="card-footer py-3" style="background: #172b4d;border-top: 1px solid rgba(0, 0, 0, 0.4);">
     <nav aria-label="...">
         <ul class="pagination justify-content-end mb-0">
             {{-- Previous Page Link --}}

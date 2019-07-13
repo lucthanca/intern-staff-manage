@@ -17,6 +17,7 @@ use App\Mail\ResetPasswordMail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Department;
+use Illuminate\Support\Facades\Validator;
 
 class RootController extends Controller
 {
@@ -29,6 +30,7 @@ class RootController extends Controller
     {
         $this->middleware('auth', ['except' => ['showFormResetPassword', 'resetPswd']]);
     }
+
 
     /**
      * Display a listing of the resource.
@@ -200,81 +202,25 @@ class RootController extends Controller
      */
     public function store()
     {
-        $user = User::withTrashed()->where('email', request('email'))->first();
-        if ($user->trashed()) {
-            $user->restore();
-            $data = request()->validate(
-                [
-                    'username' => ['required', 'string', 'max:32', 'unique:users,username,' . $user->id, 'min:3'],
-                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-                    'password' => ['required', 'string', 'min:8', 'max:255'],
-                ],
-                [
-                    'username.required' => ':attribute không được để trống',
-                    'username.min' => ':attributes tối thiểu :min ký tự',
-                    'username.max' => ':attributes chỉ được tối đa :max ký tự',
-                    'username.unique' => ':attributes đã tồn tại trong hệ thống',
-                    'email.required' => ':attribute không được để trống',
-                    'email.email' => 'Hãy nhập đúng định dạng là email',
-                    'email.max' => ':attributes nhận tối đa :max ký tự',
-                    'email.unique' => ':attributes đã tồn tại trong hệ thống',
-                    'password.required' => ':attribute không được để trống',
-                    'password.min' => ':attributes tối thiểu :min ký tự',
-                    'password.max' => ':attributes tối đa :max ký tự'
-                ],
-                [
-                    'username' => 'Tên đăng nhập',
-                    'email' => 'Email',
-                    'password' => 'Mật khẩu'
-                ]
-            );
-            if ($user->image) {
-                Storage::delete('/storage/' . $user->image);
-            }
-            // Nếu up ảnh thì thêm
-            if (request()->has('image')) {
-                $imagePath = request()->image->store('uploads', 'public');
-                $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000);
-                $image->save();
-                $imageArray = ['image' => $imagePath];
-            }
-            try {
-                $user->update([
-                    'username' => $data['username'],
-                    'password' => Hash::make($data['password']),
-                    'name' => request()->name ?? null,
-                    'birthday' => request()->birthday ?? null,
-                    'address' => request()->address ?? null,
-                    'city' => request()->city ?? null,
-                    'image' => $imageArray['image'] ?? null,
-                    'phone' => request()->phone ?? null,
-                    'logged_flag' => 0,
-                ]);
-                $password = request()->password;;
-                Mail::to($user->email)->send(new NewStaff($password, $user));
-                return redirect('/staff');
-            } catch (Exception $e) {
-                Storage::delete('/public/' . $imageArray['image']);
-            }
-        }
         $data = request()->validate(
             [
                 'username' => ['required', 'string', 'max:32', 'unique:users', 'min:3'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'email' => ['required', 'string', 'email', 'max:255', 'regex:/^[a-z][a-z0-9_\.]{2,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$/i', 'unique:users'],
                 'password' => ['required', 'string', 'min:8', 'max:255'],
             ],
             [
                 'username.required' => ':attribute không được để trống',
-                'username.min' => ':attributes tối thiểu :min ký tự',
-                'username.max' => ':attributes chỉ được tối đa :max ký tự',
-                'username.unique' => ':attributes đã tồn tại trong hệ thống',
+                'username.min' => ':attribute tối thiểu :min ký tự',
+                'username.max' => ':attribute chỉ được tối đa :max ký tự',
+                'username.unique' => ':attribute đã tồn tại trong hệ thống',
                 'email.required' => ':attribute không được để trống',
                 'email.email' => 'Hãy nhập đúng định dạng là email',
-                'email.max' => ':attributes nhận tối đa :max ký tự',
-                'email.unique' => ':attributes đã tồn tại trong hệ thống',
+                'email.max' => ':attribute nhận tối đa :max ký tự',
+                'email.unique' => ':attribute đã tồn tại trong hệ thống',
+                'email.regex' => 'hãy nhập đúng dạng :attribute - bắt đầu bằng chữ cái độ dài 3 ký tự trước @',
                 'password.required' => ':attribute không được để trống',
-                'password.min' => ':attributes tối thiểu :min ký tự',
-                'password.max' => ':attributes tối đa :max ký tự'
+                'password.min' => ':attribute tối thiểu :min ký tự',
+                'password.max' => ':attribute tối đa :max ký tự'
             ],
             [
                 'username' => 'Tên đăng nhập',
@@ -282,9 +228,6 @@ class RootController extends Controller
                 'password' => 'Mật khẩu'
             ]
         );
-        $user = User::where('email', $data['email'])->first();
-
-
         if (request()->has('image')) {
             $imagePath = request()->image->store('uploads', 'public');
             $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000);
@@ -303,7 +246,6 @@ class RootController extends Controller
                 'image' => $imageArray['image'] ?? null,
                 'phone' => request()->phone ?? null,
             ]);
-
             if ($user) {
                 $password = request()->password;;
                 Mail::to($user->email)->send(new NewStaff($password, $user));
@@ -311,6 +253,7 @@ class RootController extends Controller
             }
         } catch (Exception $e) {
             Storage::delete('/public/' . $imageArray['image']);
+            return redirect()->back()->withErrors(['errorMsg' => 'Có lỗi phát sinh, vui lòng kiểm tra lại!']);
         }
     }
 
@@ -322,7 +265,37 @@ class RootController extends Controller
      */
     public function show(User $user)
     {
-        return view('root.profile', compact('user'));
+        if (auth()->user()->logged_flag == 0) {
+            return view('components.changePass', ['status' => 0]);
+        }
+        // Nếu auth đang là user đó hoặc là root thì cho phép xem
+        if (auth()->user()->id == $user->id || auth()->user()->role == 1) {
+            return view('root.profile', compact('user'));
+        }
+        // nếu người này không có trong phòng ban @return lỗi
+        if ($user->departments->count() > 0) {
+            // Duyệt lần lượt từng phòng ban của người muốn xem
+            foreach ($user->departments as $depart) {
+                // nếu user đang đăng nhập ko có trong phòng ban @return lỗi
+                if (auth()->user()->departments->count() > 0)
+                    // Duyệt lần lượt từng phòng ban của người đang đăng nhập
+                    foreach (auth()->user()->departments as $authDepart) {
+                        // Nếu 2 người này trong cùng 1 phòng ban và người đang đăng nhập là quản lý
+                        if ($depart->id == $authDepart->id && auth()->user()->departments->find($authDepart->id)->pivot->permission == 1) {
+                            return view('root.profile', compact('user'));
+                        }
+                        return redirect()->back()->withErrors([
+                            'errorMsg' => 'Bạn không được phép xemn người này!',
+                        ]);
+                    }
+                return redirect()->back()->withErrors([
+                    'errorMsg' => 'Bạn không được phép xemn người này!',
+                ]);
+            }
+        }
+        return redirect()->back()->withErrors([
+            'errorMsg' => 'Bạn không được phép xemn người này!',
+        ]);
     }
 
     /**
@@ -333,9 +306,14 @@ class RootController extends Controller
      */
     public function edit(User $user)
     {
+        if (auth()->user()->logged_flag == 0) {
+            return view('components.changePass', ['status' => 0]);
+        }
         if (auth()->user()->role == 1 || auth()->user()->id == $user->id)
             return view('root.edit', compact('user'));
-        return abort(401);
+        return redirect()->back()->withErrors([
+            'errorMsg' => 'Bạn không có quyền chỉnh sửa người này đâuuuuuu!',
+        ]);
     }
 
     /**
@@ -393,6 +371,174 @@ class RootController extends Controller
             'phone' => request()->phone ?? null,
         ]);
         return redirect('/staff');
+    }
+
+    /**
+     * Người dùng cập nhật tên và địa chỉ
+     */
+    public function updateNameAddressBirthdayAndPhone()
+    {
+        // Tìm ra user
+        $user = User::find(request()->id);
+        if ($user) {
+            // nếu tài khoản đăng nhập hiện tại là root hoặc chính người dùng đó thì mới có quyền sửa
+            if (auth()->user()->role != 1 && auth()->user()->id != $user->id) {
+                return response()->json([
+                    'msg' => 'Xin lỗi nhoé! Bạn hổng có quyền này đâu nạ !',
+                ]);
+            }
+            if (auth()->user()->role == 1) {
+                $rules = [
+                    'name' => ['required', 'string', 'max:255'],
+                    'city' => ['required', 'string', 'max:255'],
+                    'birthday' => ['required', 'date_format:Y-m-d'],
+                    'phone' => ['required', 'regex:/((\+84|84|0)[9|3])+([0-9]{8})\b/i'],
+                    'username' => ['required', 'string', 'max:32', 'unique:users,username,' . $user->id, 'min:3'],
+                    'email' => ['required', 'string', 'email', 'max:255', 'regex:/^[a-z][a-z0-9_\.]{2,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$/i', 'unique:users,email,' . $user->id],
+                ];
+                $messages = [
+                    'name.required' => ':attribute không được để trống',
+                    'name.string' => 'Hãy nhập vào đúng định dạng chữ',
+                    'name.max' => ':attributes chỉ được tối đa :max ký tự',
+                    'city.required' => ':attribute không được để trống',
+                    'city.string' => 'Hãy nhập vào đúng định dạng chữ',
+                    'city.max' => ':attributes chỉ được tối đa :max ký tự',
+                    'birthday.required' => ':attribute không được để trống',
+                    'birthday.date_format' => 'Hãy nhập đúng định dạng cho ngày sinh nhé',
+                    'phone.required' => ':attribute không được để trống',
+                    'phone.regex' => 'Hãy nhập đúng định dạng cho :attribute, 10 số đầu 03 09 hoặc 11 số với 84, +84',
+                    'username.required' => ':attribute không được để trống',
+                    'username.min' => ':attribute tối thiểu :min ký tự',
+                    'username.max' => ':attribute chỉ được tối đa :max ký tự',
+                    'username.unique' => ':attribute đã tồn tại trong hệ thống',
+                    'email.required' => ':attribute không được để trống',
+                    'email.email' => 'Hãy nhập đúng định dạng là email',
+                    'email.max' => ':attribute nhận tối đa :max ký tự',
+                    'email.unique' => ':attribute đã tồn tại trong hệ thống',
+                    'email.regex' => 'hãy nhập đúng dạng :attribute - bắt đầu bằng chữ cái độ dài 3 ký tự trước @',
+                ];
+                $attrNames = [
+                    'name' => 'Tên',
+                    'city' => 'Thành phố',
+                    'birthday' => 'Ngày sinh',
+                    'phone' => 'Số điện thoại',
+                    'username' => 'Tên đăng nhập',
+                    'email' => 'Email',
+                ];
+                $validator = Validator::make(request()->all(), $rules, $messages, $attrNames);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'msg' => $validator->errors()->first(),
+                    ]);
+                }
+                $user->update([
+                    'username' => request()->username,
+                    'email' => request()->email,
+                    'name' => request()->name,
+                    'birthday' => request()->birthday,
+                    'address' => request()->address ?? null,
+                    'city' => request()->city,
+                    'phone' => request()->phone,
+                ]);
+                return response()->json([
+                    'user' => $user,
+                    'status' => 'success',
+                ]);
+            }
+            $rules = [
+                'name' => ['required', 'string', 'max:255'],
+                'city' => ['required', 'string', 'max:255'],
+                'birthday' => ['required', 'date_format:Y-m-d'],
+                'phone' => ['required', 'regex:/((\+84|84|0)[9|3])+([0-9]{8})\b/i'],
+            ];
+            $messages = [
+                'name.required' => ':attribute không được để trống',
+                'name.string' => 'Hãy nhập vào đúng định dạng chữ',
+                'name.max' => ':attributes chỉ được tối đa :max ký tự',
+                'city.required' => ':attribute không được để trống',
+                'city.string' => 'Hãy nhập vào đúng định dạng chữ',
+                'city.max' => ':attributes chỉ được tối đa :max ký tự',
+                'birthday.required' => ':attribute không được để trống',
+                'birthday.date_format' => 'Hãy nhập đúng định dạng cho ngày sinh nhé',
+                'phone.required' => ':attribute không được để trống',
+                'phone.regex' => 'Hãy nhập đúng định dạng cho :attribute, 10 số đầu 03 09 hoặc 11 số với 84, +84',
+            ];
+            $attrNames = [
+                'name' => 'Tên',
+                'city' => 'Thành phố',
+                'birthday' => 'Ngày sinh',
+                'phone' => 'Số điện thoại',
+            ];
+            $validator = Validator::make(request()->all(), $rules, $messages, $attrNames);
+            // Nếu validate lỗi thì đẩy thông báo ra màn hình
+            if ($validator->fails()) {
+                return response()->json([
+                    'msg' => $validator->errors()->first(),
+                ]);
+            }
+
+            $user->update([
+                'name' => request()->name,
+                'address' => request()->address ?? null,
+                'city' => request()->city,
+                'birthday' => request()->birthday,
+                'phone' => request()->phone,
+            ]);
+            return response()->json([
+                'user' => $user,
+                'status' => 'success',
+            ]);
+        } else {
+            return response()->json([
+                'msg' => 'Có gì đó sai sai nha, Không tìm thấy người dùng này',
+            ]);
+        }
+    }
+    /**
+     * Câpj nhật avatar
+     */
+    public function updateAvatar()
+    {
+        // Tìmnguowfi dùng có id 
+        $user = User::find(request()->id);
+        if (auth()->user()->role != 1 && auth()->user()->id != $user->id) {
+            return redirect()->back()->withErrors([
+                'errorMsg' => 'Xin lỗi bạn không có quyền này đâu nạ.',
+            ]);
+        }
+        if ($user) {
+            // nếu người dùng upload ảnh
+            if (request()->has('image')) {
+                // Nếu người dùng đã có ảnh trước đó thì xoá đi
+                if ($user->image) {
+                    Storage::delete('/public/' . $user->image);
+                }
+                // Lưu ảnh mới vào
+                $imagePath = request()->image->store('uploads', 'public');
+                $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000);
+                $image->save();
+                $imageArray = ['image' => $imagePath];
+                // nếu có lỗi khi update thì xoá ảnh đã up đi
+                try {
+                    $user->update([
+                        'image' => $imageArray['image'],
+                    ]);
+                    return redirect()->back();
+                } catch (Exception $e) {
+                    Storage::delete('/public/' . $imageArray['image']);
+                    return redirect()->back()->withErrors([
+                        'errorMsg' => 'Có lỗi gì đó kỳ kỳ lạ lạ xảy ra.',
+                    ]);
+                }
+            } else {
+                return redirect()->back()->withErrors([
+                    'errorMsg' => 'Hãy chọn ảnh',
+                ]);
+            }
+        }
+        return redirect()->back()->withErrors([
+            'errorMsg' => 'Không thấy người dùng này nha.',
+        ]);
     }
 
     /**
@@ -466,6 +612,17 @@ class RootController extends Controller
     // Gửi email reset mật khẩu
     public function sendEmailReset()
     {
+        if (auth()->user()->role != 1) {
+            // Nẻu request gửi đến là dùng ajax thì return về json còn ko thì return về http
+            if (request()->ajax()) {
+                return response()->json([
+                    'errorMsg' => 'Xin lỗi, bạn không có quyền làm chuyện này đâu nhé! Hi...',
+                ]);
+            }
+            return redirect()->back()->withErrors([
+                'errorMsg' => 'Xin lỗi, bạn không có quyền làm chuyện này đâu nhé! Hi...',
+            ]);
+        }
         $user = User::find(request('id'));
         // Nếu tìm được user
         if ($user) {
