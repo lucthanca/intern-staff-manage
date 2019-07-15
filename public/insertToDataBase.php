@@ -36,7 +36,7 @@ function convert_vi_to_en($str)
     //$str = str_replace(" ", "-", str_replace("&*#39;","",$str));
     return $str;
 }
-for ($i = 1; $i <= 1000; $i++) {
+for ($i = 1; $i <= 100; $i++) {
 
     $rand_fn = array_rand($firstName, 1);
     $rand_mn = array_rand($middleName, 1);

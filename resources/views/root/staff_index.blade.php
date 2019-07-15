@@ -9,6 +9,8 @@
         padding-top: 0.5rem !important;
         padding-bottom: 0.5rem !important;
     }
+    ._export_to_excel:hover {
+    }
 </style>
 @endsection
 
@@ -149,6 +151,28 @@
                 }
             });
         });
+
+        // Xuất danh sách nhân viên
+        $(document).on('click', '._export_to_excel', function() {
+            Swal.fire({
+                title: `Nhắc nhẹ !!`,
+                text: `Bạn có muốn xuất danh sách toàn bộ nhân viên này hơm`,
+                type: 'question',
+                animation: false,
+                customClass: {
+                    popup: `animated rubberBand`,
+                },
+                showCancelButton: true,
+                confirmButtonColor: '#5ada0d',
+                cancelButtonColor: '#f31d1d',
+                confirmButtonText: 'Ừm',
+                cancelButtonText: 'Hong',
+            }).then((result) => {
+                if (result.value) {
+                    window.location.replace(route('exportStaff'));
+                }
+            });
+        });
     });
     // Thông báo góc phải
     function topRightNotifications(string) {
@@ -191,6 +215,7 @@
             <a href="/new-staff/" class="btn btn-outline-primary"><i class="fas fa-plus-circle"></i> Thêm nhân viên</a>
             <a href="javascript:void(0);" class="btn btn-outline-danger _btn_delete_multi_staff"><i class="fas fa-plus-circle"></i> Xoá tập thể nhân viên</a>
             <a href="javascript:void(0);" class="btn btn-outline-info _btn_reset_multi_staff"><i class="fas fa-plus-circle"></i> Khôi phục mật khẩu</a>
+            <a href="javascript:void(0);" class="btn btn-outline-info _export_to_excel"><i class="fas fa-file-excel    "></i> Xuất danh sách nhân viên</a>
         </div>
     </div>
 

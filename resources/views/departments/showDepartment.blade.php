@@ -93,6 +93,11 @@
                 <a href="javascript:void(0);" class="btn btn-outline-primary _show_modal_add_staff_to_department" data-toggle="modal" data-target="#_add_staff_to_department_modal"><i class="fas fa-plus-circle"></i> Thêm nhân viên</a>
                 <a href="javascript:void(0);" class="btn btn-outline-danger _kich_multi_staff"><i class="fas fa-plus-circle"></i> Đá tập thể</a>
                 <a href="javascript:void(0);" class="btn btn-outline-info _btn_reset_multi_staff"><i class="fas fa-plus-circle"></i> Khôi phục mật khẩu tập thể</a>
+                <a href="javascript:void(0);" class="btn btn-outline-info _export_to_excel"><i class="fas fa-file-excel    "></i> Xuất danh sách nhân viên trong phòng</a>
+            </div>
+        @else 
+            <div class="col">
+                <a href="javascript:void(0);" class="btn btn-outline-info _export_to_excel"><i class="fas fa-file-excel    "></i> Xuất danh sách nhân viên trong phòng</a>
             </div>
         @endif
     </div>

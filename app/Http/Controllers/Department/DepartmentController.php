@@ -126,7 +126,10 @@ class DepartmentController extends Controller
         }
         $depart = Department::find(request()->id);
         if ($depart) {
-            if ($depart->users()->detach() && $depart->delete()) {
+            if ($depart->users()->count() > 0) {
+                $depart->users()->detach();
+            }
+            if ($depart->delete()) {
                 return response()->json([
                     'status' => 'success',
                 ]);
@@ -157,7 +160,7 @@ class DepartmentController extends Controller
                 'errorMsg' => 'Bạn hong có quyền vào xem phòng ban này đâu nạ!',
             ]);
         }
-        $staffs = $department->users()->paginate(10);
+        $staffs = $department->users()->orderBy('permission', 'desc')->paginate(10);
         return view('departments.showDepartment', compact('department', 'staffs'));
     }
 

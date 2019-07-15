@@ -55,4 +55,9 @@ Route::group(['namespace' => 'Department'], function () {
     Route::post('multiKick', 'DepartmentController@multiKick')->name('multiKick');
 });
 
+Route::group(['namespace' => 'Excel'], function () {
+    Route::get('exportStaff', 'ExportController@exportStaff')->name('exportStaff');
+    Route::get('exportStaffFromDepartment/{department}', 'ExportController@exportStaffFromDepartment')->name('exportStaffFromDepartment');
+});
+
 Route::get('/home', 'HomeController@index')->name('home');

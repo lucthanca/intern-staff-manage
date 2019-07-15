@@ -418,4 +418,28 @@ $(document).ready(function () {
             }
         });
     });
+
+    /**
+     * Xuất ra file excel
+     */
+    $(document).on('click', '._export_to_excel', function () {
+        Swal.fire({
+            title: `Nhắc nhẹ !!`,
+            text: `Bạn có muốn xuất danh sách toàn bộ nhân viên trong phòng này hơm`,
+            type: 'question',
+            animation: false,
+            customClass: {
+                popup: `animated rubberBand`,
+            },
+            showCancelButton: true,
+            confirmButtonColor: '#5ada0d',
+            cancelButtonColor: '#f31d1d',
+            confirmButtonText: 'Ừm',
+            cancelButtonText: 'Hong',
+        }).then((result) => {
+            if (result.value) {
+                window.location.replace(`/exportStaffFromDepartment/${departmentId}`);
+            }
+        });
+    });
 });

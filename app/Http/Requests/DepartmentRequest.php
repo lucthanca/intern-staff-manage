@@ -25,6 +25,7 @@ class DepartmentRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255', 'min:5'],
+            'description' => ['max:255'],
         ];
     }
 
@@ -35,6 +36,7 @@ class DepartmentRequest extends FormRequest
             'name.string' => ':attribute phải là ký tự',
             'name.max' => ':attribute tối đa được :max ký tự',
             'name.min' => ':attribute tối thiêu :min ký tự',
+            'description.max' => ':attribute tối đa được :max ký tự',
         ];
     }
 
@@ -42,6 +44,7 @@ class DepartmentRequest extends FormRequest
     {
         return [
             'name' => 'Tên phòng ban',
+            'description' => 'Mô tả',
         ];
     }
 }

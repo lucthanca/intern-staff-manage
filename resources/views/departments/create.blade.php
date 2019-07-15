@@ -40,16 +40,20 @@
                                         <input name="name" class="form-control" placeholder="Nhập tên phòng ban" type="text" value="{{ old('name') }}">
                                     </div>
                                     @error('name')
-                                    <div style="font-size: 0.75rem; color: #f5365c; text-shadow: 0px 0px 3px #f5365ca6">
-                                        <strong><span style="text-decoration: underline;">Chú ý:
-                                            </span>{{ $message }}</strong>
-                                    </div>
+                                        <div style="font-size: 0.75rem; color: #f5365c; text-shadow: 0px 0px 3px #f5365ca6">
+                                            <strong><span style="text-decoration: underline;">Chú ý:</span>{{ $message }}</strong>
+                                        </div>
                                     @enderror
                                 </div>
 
                                 <div class="form-group">
                                     <label>Mô tả về phòng ban</label>
                                     <textarea rows="4" class="form-control form-control-alternative" placeholder="Nhập mô tả..." name="description">{{ old('description') }}</textarea>
+                                    @error('description')
+                                        <div style="font-size: 0.75rem; color: #f5365c; text-shadow: 0px 0px 3px #f5365ca6">
+                                            <strong><span style="text-decoration: underline;">Chú ý:</span>{{ $message }}</strong>
+                                        </div>
+                                    @enderror
                                 </div>
                                 <span>(<span class="text-danger">*</span>) : Bắt buộc nhoé</span>
                             </div>
