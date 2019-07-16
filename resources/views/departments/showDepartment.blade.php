@@ -89,41 +89,39 @@
 
     <div class="row">
         @if(auth()->user()->role === 1)
-            <div class="col">
-                <a href="javascript:void(0);" class="btn btn-outline-primary _show_modal_add_staff_to_department" data-toggle="modal" data-target="#_add_staff_to_department_modal"><i class="fas fa-plus-circle"></i> Thêm nhân viên</a>
-                <a href="javascript:void(0);" class="btn btn-outline-danger _kich_multi_staff"><i class="fas fa-plus-circle"></i> Đá tập thể</a>
-                <a href="javascript:void(0);" class="btn btn-outline-info _btn_reset_multi_staff"><i class="fas fa-plus-circle"></i> Khôi phục mật khẩu tập thể</a>
-                <a href="javascript:void(0);" class="btn btn-outline-info _export_to_excel"><i class="fas fa-file-excel    "></i> Xuất danh sách nhân viên trong phòng</a>
-            </div>
-        @else 
-            <div class="col">
-                <a href="javascript:void(0);" class="btn btn-outline-info _export_to_excel"><i class="fas fa-file-excel    "></i> Xuất danh sách nhân viên trong phòng</a>
-            </div>
+        <div class="col">
+            <a href="javascript:void(0);" class="btn btn-outline-primary _show_modal_add_staff_to_department" data-toggle="modal" data-target="#_add_staff_to_department_modal"><i class="fas fa-plus-circle"></i> Thêm nhân viên</a>
+            <a href="javascript:void(0);" class="btn btn-outline-danger _kich_multi_staff"><i class="fas fa-plus-circle"></i> Đá tập thể</a>
+            <a href="javascript:void(0);" class="btn btn-outline-info _btn_reset_multi_staff"><i class="fas fa-plus-circle"></i> Khôi phục mật khẩu tập thể</a>
+            <a href="javascript:void(0);" class="btn btn-outline-info _export_to_excel"><i class="fas fa-file-excel    "></i> Xuất danh sách nhân viên trong phòng</a>
+        </div>
+        @else
+        <div class="col">
+            <a href="javascript:void(0);" class="btn btn-outline-info _export_to_excel"><i class="fas fa-file-excel    "></i> Xuất danh sách nhân viên trong phòng</a>
+        </div>
         @endif
     </div>
     @if ($department->users->count() == 0)
-        <div class="row">
-            <div class="col-md-12 col-lg-12 empty-area">
-                <h1 class="display-3">Hiện chửa có nhân viên nào trong phòng này cả, hãy thêm vào đi nè!</h1><br>
-                <h1><i class="far fa-meh"></i></h1>
-            </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 empty-area">
+            <h1 class="display-3">Hiện chửa có nhân viên nào trong phòng này cả, hãy thêm vào đi nè!</h1><br>
+            <h1><i class="far fa-meh"></i></h1>
         </div>
+    </div>
     @else
-        <div class="row mt-3">
-            <div class="col">
-                <div class="animate-border">
-                    <div class="card bg-default shadow">
-                        <div class="card-header bg-transparent border-0">
-                            <h3 class="text-white mb-0">Danh sách nhân viên trong phòng ban</h3>
-                        </div>
-                        <div id="htmlTableData">
-                            @include('departments.ajax_departmentListStaff')
-                        </div>
-                    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card bg-default shadow">
+                <div class="card-header bg-transparent border-0">
+                    <h3 class="text-white mb-0">Danh sách nhân viên trong phòng ban</h3>
+                </div>
+                <div id="htmlTableData">
+                    @include('departments.ajax_departmentListStaff')
                 </div>
             </div>
         </div>
-    
+    </div>
+
     @endif
 </div>
 
@@ -143,7 +141,6 @@
                     <div class="form-group">
                         <label>Chọn nhân viên</label>
                         <select class="form-control select_staff" multiple="multiple" data-placeholder="Chọn nhân viên" style="width: 100%;" name="ids" data-id="{{ $department->id }}">
-
                         </select>
                     </div>
                 </form>

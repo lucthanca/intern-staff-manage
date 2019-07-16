@@ -95,7 +95,7 @@ $(document).ready(function () {
                 type: "info",
                 animation: false,
                 customClass: {
-                    popup: 'animated wobble',
+                    popup: 'animated tada',
                 }
             });
         } else {

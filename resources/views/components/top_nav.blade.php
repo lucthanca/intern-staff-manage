@@ -3,7 +3,7 @@
     <div class="container-fluid">
         <!-- Brand -->
         @if(auth()->user()->logged_flag !=0 && auth()->user()->logged_flag !=-1)
-        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="/">Sờ Táp ma na rè mừn</a>
+        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="/">Quản lý nhân viên</a>
 
         <ul class="navbar-nav align-items-center d-none d-md-flex">
             <li class="nav-item dropdown">

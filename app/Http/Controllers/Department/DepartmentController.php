@@ -407,4 +407,19 @@ class DepartmentController extends Controller
             'errorMsg' => 'Hỏng có tìm thấy phòng ban này',
         ]);
     }
+
+    /**
+     * Tìm kiếm phòng ban
+     * @param tên phòng ban
+     * @return danh sách phòng ban
+     */
+    public function searchDepartment()
+    {
+        // Nếu request là ajax thì trả về json
+        if (request()->ajax()) {
+            return response()->json([
+                'data' => Department::where('name', 'like', "%" . request()->name . "%")->get(),
+            ]);
+        }
+    }
 }

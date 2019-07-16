@@ -202,6 +202,9 @@ class RootController extends Controller
      */
     public function store()
     {
+        // dd(request());
+        // $ids = request()->departments;
+        // dd($ids);
         $data = request()->validate(
             [
                 'username' => ['required', 'string', 'max:32', 'unique:users', 'min:3'],
@@ -265,6 +268,8 @@ class RootController extends Controller
      */
     public function show(User $user)
     {
+        // Biến cờ xác định xem 2 người có chung phòng ban không!
+        $flag = 0;
         if (auth()->user()->logged_flag == 0) {
             return view('components.changePass', ['status' => 0]);
         }
@@ -277,21 +282,26 @@ class RootController extends Controller
             // Duyệt lần lượt từng phòng ban của người muốn xem
             foreach ($user->departments as $depart) {
                 // nếu user đang đăng nhập ko có trong phòng ban @return lỗi
-                if (auth()->user()->departments->count() > 0)
+                if (auth()->user()->departments->count() > 0) {
                     // Duyệt lần lượt từng phòng ban của người đang đăng nhập
                     foreach (auth()->user()->departments as $authDepart) {
                         // Nếu 2 người này trong cùng 1 phòng ban và người đang đăng nhập là quản lý
                         if ($depart->id == $authDepart->id && auth()->user()->departments->find($authDepart->id)->pivot->permission == 1) {
-                            return view('root.profile', compact('user'));
+                            $flag++;
                         }
-                        return redirect()->back()->withErrors([
-                            'errorMsg' => 'Bạn không được phép xemn người này!',
-                        ]);
                     }
-                return redirect()->back()->withErrors([
-                    'errorMsg' => 'Bạn không được phép xemn người này!',
-                ]);
+                } else
+                    return redirect()->back()->withErrors([
+                        'errorMsg' => 'Bạn không được phép xemn người này!',
+                    ]);
             }
+            // kiểm tra biến cờ
+            if ($flag > 0) {
+                return view('root.profile', compact('user'));
+            }
+            return redirect()->back()->withErrors([
+                'errorMsg' => 'Bạn không được phép xemn người này!',
+            ]);
         }
         return redirect()->back()->withErrors([
             'errorMsg' => 'Bạn không được phép xemn người này!',
@@ -514,6 +524,7 @@ class RootController extends Controller
                     Storage::delete('/public/' . $user->image);
                 }
                 // Lưu ảnh mới vào
+                // echo "<pre>"; var_dump(request()->image);die;
                 $imagePath = request()->image->store('uploads', 'public');
                 $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000);
                 $image->save();
@@ -673,10 +684,16 @@ class RootController extends Controller
     // chức năng gửi mail
     public function sendMailTo($user)
     {
-        $passwordReset = PasswordReset::updateOrCreate([
+        $passwordReset = PasswordReset::where('email', $user->email)->first();
+        if ($passwordReset) {
+            $passwordReset->delete();
+        }
+
+        $passwordReset = PasswordReset::create([
             'email' => $user->email,
             'token' => Str::random(60),
         ]);
+
         // Nếu tạo thành công token
         if ($passwordReset) {
             // set trạng thái đăng nhập về -1 -reset pass

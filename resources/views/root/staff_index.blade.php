@@ -9,8 +9,8 @@
         padding-top: 0.5rem !important;
         padding-bottom: 0.5rem !important;
     }
-    ._export_to_excel:hover {
-    }
+
+    ._export_to_excel:hover {}
 </style>
 @endsection
 
@@ -83,7 +83,7 @@
                     type: "info",
                     animation: false,
                     customClass: {
-                        popup: 'animated wobble',
+                        popup: 'animated tada',
                     }
                 });
             } else {
@@ -221,14 +221,12 @@
 
     <div class="row mt-3">
         <div class="col">
-            <div class="animate-border">
-                <div class="card bg-default shadow">
-                    <div class="card-header bg-transparent border-0">
-                        <h3 class="text-white mb-0">Danh sách nhân viên</h3>
-                    </div>
-                    <div id="htmlTableData">
-                        @include('root.ajax_staff_index')
-                    </div>
+            <div class="card bg-default shadow">
+                <div class="card-header bg-transparent border-0">
+                    <h3 class="text-white mb-0">Danh sách nhân viên</h3>
+                </div>
+                <div id="htmlTableData">
+                    @include('root.ajax_staff_index')
                 </div>
             </div>
         </div>

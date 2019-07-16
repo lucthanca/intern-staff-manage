@@ -1,7 +1,7 @@
 /*
 Error: File to import not found or unreadable: ~bootstrap/scss/bootstrap.
-       Load path: E:/vadu/htdocs/StaffManage/resources/sass
-        on line 8 of E:\vadu\htdocs\StaffManage\resources\sass\app.scss
+       Load path: F:/vadu/htdocs/StaffManage/resources/sass
+        on line 8 of F:\vadu\htdocs\StaffManage\resources\sass\app.scss
 
 3: 
 4: // Variables
@@ -11,7 +11,7 @@ Error: File to import not found or unreadable: ~bootstrap/scss/bootstrap.
 8: @import '~bootstrap/scss/bootstrap';
 
 Backtrace:
-E:\vadu\htdocs\StaffManage\resources\sass\app.scss:8
+F:\vadu\htdocs\StaffManage\resources\sass\app.scss:8
 C:/Program Files (x86)/Koala/rubygems/gems/sass-3.5.2/lib/sass/tree/import_node.rb:67:in `rescue in import'
 C:/Program Files (x86)/Koala/rubygems/gems/sass-3.5.2/lib/sass/tree/import_node.rb:45:in `import'
 C:/Program Files (x86)/Koala/rubygems/gems/sass-3.5.2/lib/sass/tree/import_node.rb:28:in `imported_file'
@@ -49,4 +49,4 @@ C:/Program Files (x86)/Koala/bin/sass:22:in `<main>'
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Error: File to import not found or unreadable: ~bootstrap/scss/bootstrap.\A        Load path: E:/vadu/htdocs/StaffManage/resources/sass\A         on line 8 of E:\vadu\htdocs\StaffManage\resources\sass\app.scss\A \A 3: \A 4: // Variables\A 5: @import 'variables';\A 6: \A 7: // Bootstrap\A 8: @import '~bootstrap/scss/bootstrap';"; }
+  content: "Error: File to import not found or unreadable: ~bootstrap/scss/bootstrap.\A        Load path: F:/vadu/htdocs/StaffManage/resources/sass\A         on line 8 of F:\vadu\htdocs\StaffManage\resources\sass\app.scss\A \A 3: \A 4: // Variables\A 5: @import 'variables';\A 6: \A 7: // Bootstrap\A 8: @import '~bootstrap/scss/bootstrap';"; }

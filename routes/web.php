@@ -53,6 +53,7 @@ Route::group(['namespace' => 'Department'], function () {
     Route::post('setAsManage', 'DepartmentController@setAsManage')->name('setAsManage');
     Route::post('hasManage', 'DepartmentController@hasManage')->name('hasManage');
     Route::post('multiKick', 'DepartmentController@multiKick')->name('multiKick');
+    Route::post('searchDepartment', 'DepartmentController@searchDepartment')->name('searchDepartment');
 });
 
 Route::group(['namespace' => 'Excel'], function () {

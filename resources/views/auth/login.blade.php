@@ -156,7 +156,7 @@ bg-default
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-6">
                     <h1 class="text-white">Xin chào!</h1>
-                    <p class="text-lead text-light">Hãy đăng nhập để có thể sử dụng phun tính năng.</p>
+                    <p class="text-lead text-light">Hãy đăng nhập để có thể sử dụng phun chức năng.</p>
                 </div>
             </div>
         </div>
