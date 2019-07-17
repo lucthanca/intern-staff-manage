@@ -414,4 +414,53 @@ $(document).ready(function () {
             }
         });
     });
+
+    /**
+     * Tìm kiếm phòng ban
+     */
+    $(document).on('change paste keyup', '._department_search', function () {
+        // 
+        // Hiển thị loading ****
+        $(document).ajaxStart(function () {
+            $('.ltc-loading').css({
+                "display": "none",
+            });
+            $('._department_search_loading').css({
+                "display": "block",
+            });
+        });
+        //
+        $(document).ajaxStop(function () {
+            $('.ltc-loading').css({
+                "display": "none",
+            });
+            $('._department_search_loading').css({
+                "display": "none",
+            });
+        });
+        // hết ******************
+        //
+        var departmentName = $(this).val();
+        $.ajax({
+            type: 'post',
+            url: route('searchDepartment'),
+            data: {
+                'type': 1,
+                'name': departmentName,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#htmlTableData').html(data.html);
+            },
+        });
+    });
+    $('._department_search').focus(function () {
+        $(this).parent().parent().parent().css({
+            "max-width": "36.66667%",
+        });
+    }).blur(function () {
+        $(this).parent().parent().parent().css({
+            "max-width": "16.66667%",
+        });
+    });
 });

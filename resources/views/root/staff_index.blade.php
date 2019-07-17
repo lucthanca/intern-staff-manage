@@ -12,6 +12,8 @@
 
     ._export_to_excel:hover {}
 </style>
+<link rel="stylesheet" href="{{ asset('/assets/plugins/loading.io/loading.css') }}">
+<link rel="stylesheet" href="{{ asset('/assets/plugins/loading.io/loading-btn.css') }}">
 @endsection
 
 @section('js')
@@ -149,6 +151,58 @@
                 }
             });
         });
+
+/**
+ * Tìm kiếm phòng ban
+ */
+$(document).on('change paste keyup', '._staff_search', function () {
+    // lấy ra page num để truyueenf vào controller để khi xoá xong ko bị về trang 1
+    var page = $('#htmlTableData .table-responsive').attr('page');
+    // 
+    // Hiển thị loading ****
+    $(document).ajaxStart(function () {
+        $('.ltc-loading').css({
+            "display": "none",
+        });
+        $('._staff_search_loading').css({
+            "display": "block",
+        });
+    });
+    //
+    $(document).ajaxStop(function () {
+        $('.ltc-loading').css({
+            "display": "none",
+        });
+        $('._staff_search_loading').css({
+            "display": "none",
+        });
+    });
+    // hết ******************
+    //
+    var departmentName = $(this).val();
+    $.ajax({
+        type: 'post',
+        url: route('searchStaff'),
+        data: {
+            'type': 1,
+            'name': departmentName,
+            "page": page,
+        },
+        dataType: 'json',
+        success: function (data) {
+            $('#htmlTableData').html(data.html);
+        },
+    });
+});
+$('._staff_search').focus(function () {
+    $(this).parent().parent().parent().css({
+        "max-width": "36.66667%",
+    });
+}).blur(function () {
+    $(this).parent().parent().parent().css({
+        "max-width": "16.66667%",
+    });
+});
     });
     // Thông báo góc phải
     function topRightNotifications(string) {
@@ -198,8 +252,21 @@
     <div class="row mt-3">
         <div class="col">
             <div class="card bg-default shadow">
-                <div class="card-header bg-transparent border-0">
+                <div class="card-header bg-transparent border-2 pb-5 d-flex">
                     <h3 class="text-white mb-0">Danh sách nhân viên</h3>
+                    <div class="col-md-2" style="position: absolute; right: 0; transition: max-width .3s ease-out">
+                            <div class="form-group">
+                                <div class="input-group mb-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
+                                    </div>
+                                    <input class="form-control _staff_search" placeholder="Tìm nhân viên" type="text" style="padding-left: 10px;">
+                                    <div class="input-group-prepend _staff_search_loading" style="display: none;">
+                                        <span class="input-group-text" style="border-left: none; border-radius: .375rem; border-top-left-radius: 0; border-bottom-left-radius: 0;"><i class="ld ld-ring ld-spin-fast" style="font-size:1.5em"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
                 <div id="htmlTableData">
                     @include('root.ajax_staff_index')

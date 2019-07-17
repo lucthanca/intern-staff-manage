@@ -123,18 +123,18 @@
                     <div class="col-lg-5 col-md-12">
                         <div class="card bg-secondary shadow border-0">
                             <div class="card-body px-lg-5 py-lg-5">
-
                                 <div class="box-title mb-3">
                                     <h1 class="title"> Tài khoản</h1>
                                 </div>
-
                                 <div class="form-group">
                                     <div class="input-group input-group-alternative mb-3">
-                                        <label for="username" class="text-danger">*</label>
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
                                         </div>
                                         <input name="username" class="form-control" placeholder="Tài khoản" type="text" value="{{ old('username') }}">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" style="color: red;"><i class="ni ni-atom"></i></span>
+                                        </div>
                                     </div>
                                     @error('username')
                                     <div style="font-size: 0.75rem; color: #f5365c; text-shadow: 0px 0px 3px #f5365ca6">
@@ -145,11 +145,13 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group input-group-alternative mb-3">
-                                        <label for="username" class="text-danger">*</label>
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                                         </div>
                                         <input pattern="^[a-z][a-z0-9_\.]{2,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$" name="email" class="form-control" placeholder="Email" type="email" value="{{ old('email') }}">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" style="color: red;"><i class="ni ni-atom"></i></span>
+                                        </div>
                                     </div>
                                     <small id="helpId" class="form-text text-muted pl-3 pr-3 text-light-blue"> &rsaquo;
                                         Email bắt đầu bằng chữ cái từ 3 đến 32 ký tự, tên miền có thể là cấp 1 hoặc cấp
@@ -175,7 +177,9 @@
                                     </div>
                                     @enderror
                                 </div>
-                                <span>(<span class="text-danger">*</span>) : Bắt buộc nhoé</span>
+                            </div>
+                            <div class="col-lg-12 col-md-12 px-lg-5 mb-3 text-left">
+                                <strong>(<span style="color: red;"><i class="ni ni-atom"></i></span>) : bắt buộc nhoé!</strong>
                             </div>
                         </div>
                         <div class="card bg-secondary shadow border-0 mt-3">

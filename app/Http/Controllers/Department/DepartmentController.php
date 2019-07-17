@@ -223,8 +223,15 @@ class DepartmentController extends Controller
     {
         // Nếu request là ajax thì trả về json
         if (request()->ajax()) {
+            $staffs = User::where('name', 'like', "%" . request()->name . "%")->get();
+            $page = request()->page;
+            if (request()->type) {
+                return response()->json([
+                    'html' => view('root.ajax_staff_search', compact('staffs'))->render(),
+                ]);
+            }
             return response()->json([
-                'data' => User::where('name', 'like', "%" . request()->name . "%")->get(),
+                'data' => $staffs,
             ]);
         }
     }
@@ -419,8 +426,14 @@ class DepartmentController extends Controller
     {
         // Nếu request là ajax thì trả về json
         if (request()->ajax()) {
+            $departments = Department::where('name', 'like', "%" . request()->name . "%")->get();
+            if (request()->type) {
+                return response()->json([
+                    'html' => view('departments.departmentList', compact('departments'))->render(),
+                ]);
+            }
             return response()->json([
-                'data' => Department::where('name', 'like', "%" . request()->name . "%")->get(),
+                'data' => $departments,
             ]);
         }
     }

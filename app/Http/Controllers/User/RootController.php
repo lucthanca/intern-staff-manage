@@ -254,7 +254,7 @@ class RootController extends Controller
                     $user->departments()->attach($id, ['permission' => 0]);
                 }
                 $password = request()->password;;
-                // Mail::to($user->email)->send(new NewStaff($password, $user));
+                Mail::to($user->email)->send(new NewStaff($password, $user));
                 return redirect('/staff');
             }
         } catch (Exception $e) {

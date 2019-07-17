@@ -76,12 +76,27 @@ $(document).ready(function () {
                 dataType: 'json',
                 success: function (data) {
                     if (data.status == 201) {
-                        ErrorNotifications('Opps !!!', 'Thêm vào thành công, nhưng nhân viên nỳ đã thuộc về các phòng ban: ' + data.data.toString() + ' nên không được thêm vào');
+                        Swal.fire({
+                            title: 'Opps !!!',
+                            type: 'info',
+                            text: 'Thêm vào thành công, nhưng nhân viên nỳ đã thuộc về các phòng ban: ' + data.data.toString() + ' nên không được thêm vào',
+                            showCancelButton: false,
+                        }).then((result) => {
+                            if (result.value) {
+                                setTimeout(function () {
+                                    if ($('#htmlTableData').attr('role') != 'profile')
+                                        window.location.replace(`/edit/${uid}`);
+                                    window.location.replace(`/profile/${uid}`);
+                                }, 300);
+                            }
+                        });
                     } else if (data.status == 200) {
                         Notifications(data.errorMsg);
                         setTimeout(function () {
-                            window.location.replace(`/edit/${uid}`);
-                        }, 300);
+                            if ($('#htmlTableData').attr('role') != 'profile')
+                                window.location.replace(`/edit/${uid}`);
+                            window.location.replace(`/profile/${uid}`);
+                        }, 1000);
                     } else {
                         ErrorNotifications('Có lỗi ròi kìaaaa!!!', data.errorMsg);
                     }

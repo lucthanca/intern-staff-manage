@@ -2,14 +2,14 @@ $(document).ready(function () {
     // 
     // Hiển thị loading ****
     $(document).ajaxStart(function () {
-        console.log('start');
+        console.log('ajax start');
         $('.ltc-loading').css({
             "display": "flex",
         });
     });
     //
     $(document).ajaxStop(function () {
-        console.log('stop');
+        console.log('ajax stop');
         $('.ltc-loading').css({
             "display": "none",
         });

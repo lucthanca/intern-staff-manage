@@ -3,6 +3,8 @@
 @endsection
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('/assets/plugins/loading.io/loading.css') }}">
+<link rel="stylesheet" href="{{ asset('/assets/plugins/loading.io/loading-btn.css') }}">
 <link rel="stylesheet" href="{{ asset('/css/card.css') }}">
 <style>
     .toggle {
@@ -76,6 +78,14 @@
         color: #e8a02f;
     }
 </style>
+<style>
+._department_search::placeholder {
+    color: #ed776d;
+}
+._department_search:focus::placeholder {
+    color: #e9746ac2;
+}
+</style>
 @endsection
 
 @section('content')
@@ -86,7 +96,7 @@
         @if(auth()->user()->role === 1)
             <div class="col">
                 <a href="/new-department/" class="btn btn-outline-primary"><i class="fas fa-plus-circle"></i> Thêm phòng ban</a>
-                <a href="javascript:void(0);" class="btn btn-outline-danger _btn_delete_multi_department"><i class="fas fa-plus-circle"></i> Xoá phòng ban</a>
+                <!-- <a href="javascript:void(0);" class="btn btn-outline-danger _btn_delete_multi_department"><i class="fas fa-plus-circle"></i> Xoá phòng ban</a> -->
             </div>
         @endif
     </div>
@@ -112,143 +122,28 @@
                 </div>
             @else
                 <div class="card bg-default shadow">
-                    <div class="card-header bg-transparent border-0">
+                    <div class="card-header bg-transparent pb-5 border-1 d-flex">
                         @if(auth()->user()->role == 1)
                             <h3 class="text-white mb-0">Danh sách các phòng ban</h3>
                         @else
                             <h3 class="text-white mb-0">Danh sách các phòng ban bạn thuộc về</h3>
                         @endif
+                        <div class="col-md-2" style="position: absolute; right: 0; transition: max-width .3s ease-out">
+                            <div class="form-group">
+                                <div class="input-group mb-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="color: #e9746a;"><i class="ni ni-zoom-split-in"></i></span>
+                                    </div>
+                                    <input id="_department_search" class="form-control _department_search" placeholder="Tìm phòng ban" type="text" name="departmentName" style="color: #ed776d; padding-left: 10px;">
+                                    <div class="input-group-prepend _department_search_loading" style="display: none;">
+                                        <span class="input-group-text" style="color: #e9746a; border-left: none; border-radius: .375rem; border-top-left-radius: 0; border-bottom-left-radius: 0;"><i class="ld ld-ring ld-spin-fast" style="font-size:1.5em"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div id="htmlTableData">
-                        <div class="row px-3">
-                            @foreach($departments as $depart)
-                            @if(auth()->user()->role == 1)
-                                <div class="card-container col-md-3">
-                                    <a href="javascript:void(0);">
-                                        <div class="department-card">
-                                            <div class="additional">
-                                                <div class="user-card">
-                                                    <div class="level center">
-                                                        Quản lý
-                                                    </div>
-                                                    @if($depart->users()->where('permission', 1)->count() == 0)
-                                                        <img src="{{ asset('/img/no-user.png') }}" alt="" width="75">
-                                                    @else
-                                                    @foreach($depart->users as $user)
-                                                    @if($user->pivot->permission == 1)
-                                                        <img src="{{ $user->getAvatar() }}" alt="" width="75" title="{{ $user->name }}">
-                                                    @endif
-                                                    @endforeach
-                                                    @endif
-                                                </div>
-                                                <div class="more-info">
-                                                    <h1>{{ $depart->name }}</h1>
-                                                    <div class="coords">
-                                                        <span>Quản lý: </span>
-                                                        @if($depart->users()->where('permission', 1)->count() == 0)
-                                                            <span>Chưa có quản lý</span>
-                                                        @else
-                                                        @foreach($depart->users as $user)
-                                                        @if($user->pivot->permission == 1)
-                                                            <span>{{ $user->name ?? 'Chưa cập nhật tên'}}</span>
-                                                        @endif
-                                                        @endforeach
-                                                        @endif
-                                                    </div>
-                                                    <div class="coords">
-                                                        <span>Ngày tạo: </span>
-                                                        <span>{{ $depart->created_at->isoFormat('DD-MM-YYYY') }}</span>
-                                                    </div>
-                                                    <div class="stats">
-                                                        <div>
-                                                            <div class="title">Số nhân viên</div>
-                                                            <i class="fas fa-users"></i>
-                                                            <div class="value">{{ $depart->users->count() }}</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="toggle" id="toggle" status="0">
-                                                        <i class="fa fa-plus" id="plus"></i>
-                                                    </div>
-                                                    <div class="menu menu-func" id="menu">
-                                                        <a href="/department/{{ $depart->id }}" class="_show" title="Xem thông tin phòng ban">
-                                                            <i class="fas fa-building    "></i>
-                                                        </a>
-                                                        <a href="/department/{{ $depart->id }}/edit" class="_edit" title="Sửa">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        <a href="javascript:void(0);" class="_delete" data-id="{{ $depart->id }}" title="Xoá">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="general">
-                                                <h1>{{ $depart->name }}</h1>
-                                                <p>{{ $depart->description }}.</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            @else
-                            @foreach($depart->users as $user)
-                            @if($user->id == auth()->user()->id)
-                                <div class="card-container col-md-3">
-                                    <a href="/department/{{ $depart->id }}">
-                                        <div class="department-card">
-                                            <div class="additional">
-                                                <div class="user-card">
-                                                    <div class="level center">
-                                                        Quản lý
-                                                    </div>
-                                                    @if($depart->users()->where('permission', 1)->count() == 0)
-                                                        <img src="{{ asset('/img/no-user.png') }}" alt="" width="75">
-                                                    @else
-                                                    @foreach($depart->users as $user)
-                                                    @if($user->pivot->permission == 1)
-                                                        <img src="{{ $user->getAvatar() }}" alt="" width="75" title="{{ $user->name }}">
-                                                    @endif
-                                                    @endforeach
-                                                    @endif
-                                                </div>
-                                                <div class="more-info">
-                                                    <h1>{{ $depart->name }}</h1>
-                                                    <div class="coords">
-                                                        <span>Quản lý: </span>
-                                                        @if($depart->users()->where('permission', 1)->count() == 0)
-                                                            <span>Chưa có quản lý</span>
-                                                        @else
-                                                        @foreach($depart->users as $user)
-                                                        @if($user->pivot->permission == 1)
-                                                            <span>{{ $user->name ?? 'Chưa cập nhật tên'}}</span>
-                                                        @endif
-                                                        @endforeach
-                                                        @endif
-                                                    </div>
-                                                    <div class="coords">
-                                                        <span>Ngày tạo: </span>
-                                                        <span>{{ $depart->created_at->isoFormat('DD-MM-YYYY') }}</span>
-                                                    </div>
-                                                    <div class="stats">
-                                                        <div>
-                                                            <div class="title">Số nhân viên</div>
-                                                            <i class="fas fa-users"></i>
-                                                            <div class="value">{{ $depart->users->count() }}</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="general">
-                                                <h1>{{ $depart->name }}</h1>
-                                                <p>{{ $depart->description }}.</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            @endif
-                            @endforeach
-                            @endif
-                            @endforeach
-                        </div>
+                        @include('departments.departmentList')
                     </div>
                 </div>
             @endif

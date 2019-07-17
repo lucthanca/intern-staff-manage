@@ -50,7 +50,7 @@ class ExportController extends Controller
             ]);
         }
         $manage = $department->users(auth()->user()->id)->first();
-        if ($manage->pivot->permission == 1) {
+        if ($manage->pivot->permission == 1 || auth()->user()->role == 1) {
             return Excel::download(new Export(2, $department, 1), 'danh sách nhân viên phòng ' . $department->name . '.xlsx');
         }
         return Excel::download(new Export(2, $department, 0), 'danh sách nhân viên phòng ' . $department->name . '.xlsx');
