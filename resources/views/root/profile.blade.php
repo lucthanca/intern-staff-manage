@@ -706,10 +706,6 @@
                         Swal.fire({
                             title: data.msg,
                             type: 'error',
-                            animation: false,
-                            customClass: {
-                                popup: `animated tada`,
-                            }
                         });
                     } else {
                         var info = $('.info');

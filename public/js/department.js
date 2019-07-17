@@ -108,10 +108,6 @@ $(document).ready(function () {
             Swal.fire({
                 title: `Hãy chọn ít nhất 1 nhân viên để thêm, không thêm thì ấn đóng chứ đừng ấn thêm.`,
                 type: `info`,
-                animation: false,
-                customClass: {
-                    popup: `animated tada`,
-                }
             });
         }
         $.ajax({
@@ -164,11 +160,7 @@ $(document).ready(function () {
             Swal.fire({
                 title: `Hãy chọn ít nhất một người để thao tác.`,
                 type: `info`,
-                animation: false,
                 confirmButtonText: `Ò`,
-                customClass: {
-                    popup: `animated tada`,
-                }
             });
         } else {
             Swal.fire({
@@ -232,10 +224,6 @@ $(document).ready(function () {
             title: `Nhắc nhẹ !`,
             text: `Bạn có muốn đá nhân viên này ra khỏi phòng ban hong?`,
             type: 'question',
-            animation: false,
-            customClass: {
-                popup: `animated fadeInDown`,
-            },
             showCancelButton: true,
             confirmButtonColor: '#5ada0d',
             cancelButtonColor: '#f31d1d',
@@ -272,10 +260,6 @@ $(document).ready(function () {
             title: `Nhắc nhẹ !`,
             text: `Bạn có muốn hạ phẩm người này thành nhân viên hong?`,
             type: 'question',
-            animation: false,
-            customClass: {
-                popup: `animated rubberBand`,
-            },
             showCancelButton: true,
             confirmButtonColor: '#5ada0d',
             cancelButtonColor: '#f31d1d',
@@ -318,10 +302,6 @@ $(document).ready(function () {
             title: `Nhắc nhẹ !`,
             text: `Bạn có muốn tăng người này siêu cấp quản lý hong?`,
             type: 'question',
-            animation: false,
-            customClass: {
-                popup: `animated rubberBand`,
-            },
             showCancelButton: true,
             confirmButtonColor: '#5ada0d',
             cancelButtonColor: '#f31d1d',
@@ -342,10 +322,6 @@ $(document).ready(function () {
                                 title: `Nhắc nhẹ !!`,
                                 text: data.errorMsg + ` Bạn có muốn thế chỗ người này cho người quản lý cũ ??`,
                                 type: `question`,
-                                animation: false,
-                                customClass: {
-                                    popup: `animated tada`,
-                                },
                                 showCancelButton: true,
                                 confirmButtonColor: '#5ada0d',
                                 cancelButtonColor: '#f31d1d',
@@ -427,10 +403,6 @@ $(document).ready(function () {
             title: `Nhắc nhẹ !!`,
             text: `Bạn có muốn xuất danh sách toàn bộ nhân viên trong phòng này hơm`,
             type: 'question',
-            animation: false,
-            customClass: {
-                popup: `animated rubberBand`,
-            },
             showCancelButton: true,
             confirmButtonColor: '#5ada0d',
             cancelButtonColor: '#f31d1d',

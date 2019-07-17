@@ -10,12 +10,13 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class Export extends Model implements FromCollection, WithHeadings, WithEvents, ShouldAutoSize
 {
-    protected $type, $department;
+    protected $type, $department, $permission;
 
-    public function __construct($type, $department)
+    public function __construct($type, $department, $permission)
     {
         $this->type = $type;
         $this->department = $department;
+        $this->permission = $permission;
     }
 
     public function registerEvents(): array
@@ -31,19 +32,54 @@ class Export extends Model implements FromCollection, WithHeadings, WithEvents, 
     public function collection()
     {
         $this->type == 1 ? $staffs = User::all() : $staffs = $this->department->users;
-
-        foreach ($staffs as $row) {
-            $staff[] = array(
-                '0' => $row->id,
-                '1' => $row->username,
-                '2' => $row->email,
-                '3' => $row->name,
-                '4' => $row->birthday,
-                '5' => $row->address,
-                '6' => $row->city,
-                '7' => $row->phone,
-                '8' => $this->type == 1 ? $row->created_at : $row->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên',
-            );
+        if ($this->type == 1) {
+            foreach ($staffs as $row) {
+                if ($row->role != 1) {
+                    $staff[] = array(
+                        '0' => $row->id,
+                        '1' => $row->username,
+                        '2' => $row->email,
+                        '3' => $row->name,
+                        '4' => $row->birthday,
+                        '5' => $row->address,
+                        '6' => $row->city,
+                        '7' => $row->phone,
+                        '8' => $this->type == 1 ? $row->created_at : $row->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên',
+                    );
+                }
+            }
+        } else {
+            if ($this->permission == 1) {
+                foreach ($staffs as $row) {
+                    $staff[] = array(
+                        '0' => $row->id,
+                        '1' => $row->username,
+                        '2' => $row->email,
+                        '3' => $row->name,
+                        '4' => $row->birthday,
+                        '5' => $row->address,
+                        '6' => $row->city,
+                        '7' => $row->phone,
+                        '8' => $this->type == 1 ? $row->created_at : $row->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên',
+                    );
+                }
+            } else {
+                foreach ($staffs as $row) {
+                    if ($row->pivot->permission != 1) {
+                        $staff[] = array(
+                            '0' => $row->id,
+                            '1' => $row->username,
+                            '2' => $row->email,
+                            '3' => $row->name,
+                            '4' => $row->birthday,
+                            '5' => $row->address,
+                            '6' => $row->city,
+                            '7' => $row->phone,
+                            '8' => $this->type == 1 ? $row->created_at : $row->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên',
+                        );
+                    }
+                }
+            }
         }
         return (collect($staff));
     }

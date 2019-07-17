@@ -108,45 +108,6 @@
 
 @endsection
 
-@section('js')
-
-
-<script>
-    $(document).ready(function() {
-
-        // Hiển thị mật khẩu
-        $(document).on('click', '.show-password', function() {
-            if ($(this).parent().next().attr('type') == 'password') {
-                $(this).parent().next().attr('type', 'text');
-                $(this).children().removeClass('fa-lock').addClass('fa-lock-open');
-            } else {
-                $(this).parent().next().attr('type', 'password');
-                $(this).children().removeClass('fa-lock-open').addClass('fa-lock');
-            }
-        });
-
-        // image box
-        var readURL = function(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function(e) {
-                    $('.profile-pic').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-        $(".file-upload").on('change', function() {
-            readURL(this);
-        });
-        $(".upload-button").on('click', function() {
-            $(".file-upload").click();
-        });
-    });
-</script>
-
-@endsection
-
 @section('content')
 
 <div class="container-fluid mt-3 pb-5">
@@ -317,33 +278,5 @@
 @endsection
 @section('departmentJs')
 <script src="{{ asset('/assets/plugins/select2/select2.min.js') }}"></script>
-<script>
-    $('.select_department').select2({
-        placeholder: "Hãy chọn các phòng ban",
-        pagination: {
-            more: true,
-        },
-        ajax: {
-            url: route('searchDepartment'),
-            type: 'post',
-            dataType: 'json',
-            delay: 250,
-            data: function(params) {
-                return {
-                    name: params.term,
-                };
-            },
-            processResults: function(data) {
-                return {
-                    results: $.map(data.data, function(val, i) {
-                        return {
-                            id: val.id,
-                            text: val.name == null ? `ID: ${val.id} - Chưa cập nhật tên` : val.name
-                        };
-                    })
-                }
-            }
-        }
-    });
-</script>
+<script src="{{ asset('/js/root.js') }}"></script>
 @endsection

@@ -202,9 +202,7 @@ class RootController extends Controller
      */
     public function store()
     {
-        // dd(request());
-        // $ids = request()->departments;
-        // dd($ids);
+        $ids = request()->departments;
         $data = request()->validate(
             [
                 'username' => ['required', 'string', 'max:32', 'unique:users', 'min:3'],
@@ -250,8 +248,13 @@ class RootController extends Controller
                 'phone' => request()->phone ?? null,
             ]);
             if ($user) {
+                // Thêm vào phòng ban
+                // Nếu có phòng ban được chọn
+                foreach ($ids as $id) {
+                    $user->departments()->attach($id, ['permission' => 0]);
+                }
                 $password = request()->password;;
-                Mail::to($user->email)->send(new NewStaff($password, $user));
+                // Mail::to($user->email)->send(new NewStaff($password, $user));
                 return redirect('/staff');
             }
         } catch (Exception $e) {
@@ -268,6 +271,7 @@ class RootController extends Controller
      */
     public function show(User $user)
     {
+        $userDepartments = $user->departments()->paginate(3);
         // Biến cờ xác định xem 2 người có chung phòng ban không!
         $flag = 0;
         if (auth()->user()->logged_flag == 0) {
@@ -275,7 +279,7 @@ class RootController extends Controller
         }
         // Nếu auth đang là user đó hoặc là root thì cho phép xem
         if (auth()->user()->id == $user->id || auth()->user()->role == 1) {
-            return view('root.profile', compact('user'));
+            return view('root.profile', compact('user', 'userDepartments'));
         }
         // nếu người này không có trong phòng ban @return lỗi
         if ($user->departments->count() > 0) {
@@ -297,7 +301,7 @@ class RootController extends Controller
             }
             // kiểm tra biến cờ
             if ($flag > 0) {
-                return view('root.profile', compact('user'));
+                return view('root.profile', compact('user', 'userDepartments'));
             }
             return redirect()->back()->withErrors([
                 'errorMsg' => 'Bạn không được phép xemn người này!',
@@ -316,11 +320,12 @@ class RootController extends Controller
      */
     public function edit(User $user)
     {
+        $userDepartments = $user->departments()->paginate(3);
         if (auth()->user()->logged_flag == 0) {
             return view('components.changePass', ['status' => 0]);
         }
         if (auth()->user()->role == 1 || auth()->user()->id == $user->id)
-            return view('root.edit', compact('user'));
+            return view('root.edit', compact('user', 'userDepartments'));
         return redirect()->back()->withErrors([
             'errorMsg' => 'Bạn không có quyền chỉnh sửa người này đâuuuuuu!',
         ]);
@@ -335,52 +340,100 @@ class RootController extends Controller
      */
     public function update()
     {
-        $data = request()->validate(
-            [
-                'username' => ['required', 'string', 'max:32', 'unique:users,username,' . request()->id, 'min:3'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . request()->id],
-            ],
-            [
-                'username.required' => ':attribute không được để trống',
-                'username.min' => ':attributes tối thiểu :min ký tự',
-                'username.max' => ':attributes chỉ được tối đa :max ký tự',
-                'username.unique' => ':attributes đã tồn tại trong hệ thống',
-                'email.required' => ':attribute không được để trống',
-                'email.email' => 'Hãy nhập đúng định dạng là email',
-                'email.max' => ':attributes nhận tối đa :max ký tự',
-                'email.unique' => ':attributes đã tồn tại trong hệ thống',
-                'password.required' => ':attribute không được để trống',
-                'password.min' => ':attributes tối thiểu :min ký tự',
-                'password.max' => ':attributes tối đa :max ký tự'
-            ],
-            [
-                'username' => 'Tên đăng nhập',
-                'email' => 'Email',
-                'password' => 'Mật khẩu'
-            ]
-
-        );
         $user = User::find(request()->id);
-        if ($user->image) {
-            Storage::delete('/public/' . $user->image);
+        if ($user) {
+            if (auth()->user()->role == 1 || auth()->user()->id = $user->id) {
+                if ($user->image) {
+                    Storage::delete('/public/' . $user->image);
+                }
+                if (request()->has('image')) {
+                    $imagePath = request()->image->store('uploads', 'public');
+                    $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000);
+                    $image->save();
+                    $imageArray = ['image' => $imagePath];
+                }
+                if (auth()->user()->role == 1) {
+
+                    $data = request()->validate(
+                        [
+                            'username' => ['required', 'string', 'max:32', 'unique:users,username,' . request()->id, 'min:3'],
+                            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . request()->id],
+                        ],
+                        [
+                            'username.required' => ':attribute không được để trống',
+                            'username.min' => ':attributes tối thiểu :min ký tự',
+                            'username.max' => ':attributes chỉ được tối đa :max ký tự',
+                            'username.unique' => ':attributes đã tồn tại trong hệ thống',
+                            'email.required' => ':attribute không được để trống',
+                            'email.email' => 'Hãy nhập đúng định dạng là email',
+                            'email.max' => ':attributes nhận tối đa :max ký tự',
+                            'email.unique' => ':attributes đã tồn tại trong hệ thống',
+                            'password.required' => ':attribute không được để trống',
+                            'password.min' => ':attributes tối thiểu :min ký tự',
+                            'password.max' => ':attributes tối đa :max ký tự'
+                        ],
+                        [
+                            'username' => 'Tên đăng nhập',
+                            'email' => 'Email',
+                            'password' => 'Mật khẩu'
+                        ]
+
+                    );
+                    $user->update([
+                        'username' => $data['username'],
+                        'email' => $data['email'],
+                        'name' => request()->name ?? null,
+                        'birthday' => request()->birthday ?? null,
+                        'address' => request()->address ?? null,
+                        'city' => request()->city ?? null,
+                        'image' => $imageArray['image'] ?? null,
+                        'phone' => request()->phone ?? null,
+                    ]);
+                    return redirect('/staff');
+                }
+                $data = request()->validate(
+                    [
+                        'name' => ['required', 'string', 'max:255'],
+                        'city' => ['required', 'string', 'max:255'],
+                        'birthday' => ['required', 'date_format:Y-m-d'],
+                        'phone' => ['required', 'regex:/((\+84|84|0)[9|3])+([0-9]{8})\b/i'],
+                    ],
+                    [
+                        'name.required' => ':attribute không được để trống',
+                        'name.string' => 'Hãy nhập vào đúng định dạng chữ',
+                        'name.max' => ':attributes chỉ được tối đa :max ký tự',
+                        'city.required' => ':attribute không được để trống',
+                        'city.string' => 'Hãy nhập vào đúng định dạng chữ',
+                        'city.max' => ':attributes chỉ được tối đa :max ký tự',
+                        'birthday.required' => ':attribute không được để trống',
+                        'birthday.date_format' => 'Hãy nhập đúng định dạng cho ngày sinh nhé',
+                        'phone.required' => ':attribute không được để trống',
+                        'phone.regex' => 'Hãy nhập đúng định dạng cho :attribute, 10 số đầu 03 09 hoặc 11 số với 84, +84',
+                    ],
+                    [
+                        'name' => 'Tên',
+                        'city' => 'Thành phố',
+                        'birthday' => 'Ngày sinh',
+                        'phone' => 'Số điện thoại',
+                    ]
+                );
+                $user->update([
+                    'name' => $data['name'],
+                    'birthday' => $data['birthday'],
+                    'address' => request()->address ?? null,
+                    'city' => $data['city'],
+                    'image' => $imageArray['image'] ?? null,
+                    'phone' => $data['phone'],
+                ]);
+                return redirect('/edit / '.$user->id);
+            }
+            return redirect()->back()->withErrors([
+                'errorMsg' => 'Xin lỗi, bạn không có quyền làm chuyện này đâu nhé! Hi...',
+            ]);
         }
-        if (request()->has('image')) {
-            $imagePath = request()->image->store('uploads', 'public');
-            $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000);
-            $image->save();
-            $imageArray = ['image' => $imagePath];
-        }
-        $user->update([
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'name' => request()->name ?? null,
-            'birthday' => request()->birthday ?? null,
-            'address' => request()->address ?? null,
-            'city' => request()->city ?? null,
-            'image' => $imageArray['image'] ?? null,
-            'phone' => request()->phone ?? null,
+        return redirect()->back()->withErrors([
+            'errorMsg' => 'Hỏng có tìm thấy nhân viên này!',
         ]);
-        return redirect('/staff');
     }
 
     /**
@@ -706,5 +759,91 @@ class RootController extends Controller
             return 1;
         }
         return $user->id;
+    }
+
+    /**
+     * Thêm phòng ban cho nhân viên
+     * @param mảng id của phòng ban
+     * @return response
+     */
+    public function addToDepartment()
+    {
+        $error = [];
+        if (auth()->user()->role != 1) {
+            // Nẻu request gửi đến là dùng ajax thì return về json còn ko thì return về http
+            if (request()->ajax()) {
+                return response()->json([
+                    'status' => 401,
+                    'errorMsg' => 'Xin lỗi, bạn không có quyền làm chuyện này đâu nhé! Hi...',
+                ]);
+            }
+            return redirect()->back()->withErrors([
+                'errorMsg' => 'Xin lỗi, bạn không có quyền làm chuyện này đâu nhé! Hi...',
+            ]);
+        }
+        $user = User::find(request()->uid);
+        if ($user) {
+            foreach (request()->ids as $id) {
+                if (!$user->departments->contains($id)) {
+                    $user->departments()->attach($id, ['permission' => 0]);
+                } else {
+                    $department = Department::find($id);
+                    array_push($error, $department->name);
+                }
+            }
+            if (count($error) == count(request()->ids)) {
+                return response()->json([
+                    'status' => 500,
+                    'errorMsg' => count(request()->ids) > 1 ? 'Nhân viên này đều đã ở trong các phòng ban này ròi!' : 'Nhân viên này đã ở trong phòng ban này rồi!',
+                ]);
+            } else if (count($error) > 0) {
+                return response()->json([
+                    'status' => 201,
+                    'data' => $error,
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 200,
+                    'errorMsg' => 'Thêm thành công!',
+                ]);
+            }
+        }
+        return response()->json([
+            'status' => 404,
+            'errorMsg' => 'Xin lỗi, Hong có tìm thấy người này! Hi...',
+        ]);
+    }
+
+    /**
+     * Đá nhân viên khỏi phòng ban
+     * @param id của nhân viên, id của phòng ban
+     * @return response
+     */
+    public function kichOutFromDepartment()
+    {
+        if (auth()->user()->role != 1) {
+            return response()->json([
+                'status' => 401,
+                'errorMsg' => 'Bạn hong có quyền làm chuyện ấy đâu...',
+            ]);
+        }
+        $user = User::find(request()->uid);
+        $department = Department::find(request()->departmentId);
+        if ($user && $department) {
+            if ($user->departments->contains($department->id)) {
+                $user->departments()->detach($department->id);
+                return response()->json([
+                    'status' => 200,
+                ]);
+            }
+            return response()->json([
+                'status' => 404,
+                'errorMsg' => 'Nhân viên này làm gì có trong phòng này nhỉ??!!',
+            ]);
+        }
+        return response()->json([
+            'status' => 404,
+            'errorMsg' => 'Không tìm thấy nhân viên hoặc phòng ban này',
+        ]);
     }
 }

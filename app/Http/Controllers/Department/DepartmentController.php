@@ -328,6 +328,7 @@ class DepartmentController extends Controller
      */
     public function setAsManage()
     {
+        $a = 'ltc';
         if (auth()->user()->role != 1) {
             return response()->json([
                 'status' => 401,
@@ -339,8 +340,8 @@ class DepartmentController extends Controller
             if ($department) {
                 if (!$department->users->contains(request()->userId)) {
                     return response()->json([
-                        'status' => 4042,
-                        'errorMsg' => 'Hỏng có tìm thấy nhân viên này',
+                        'status' => 404,
+                        'errorMsg' => 'Hỏng có tìm thấy nhân viên này trong phòng ban',
                     ]);
                 }
                 // Tìm người quản lý cũ và hạ cấp
@@ -354,10 +355,11 @@ class DepartmentController extends Controller
                 }
                 return response()->json([
                     'status' => 200,
+                    'name' => User::find(request()->userId)->name,
                 ]);
             }
             return response()->json([
-                'status' => 4041,
+                'status' => 404,
                 'errorMsg' => 'Hỏng có tìm thấy phòng ban này',
             ]);
         }

@@ -48,10 +48,6 @@ $(document).ready(function () {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Ừm!',
             cancelButtonText: 'Không, mình ấn nhầm',
-            animation: false,
-            customClass: {
-                popup: 'animated tada'
-            }
         }).then((result) => {
             if (result.value) {
                 $.ajax({
@@ -65,10 +61,6 @@ $(document).ready(function () {
                         if (data.status == 'false') {
                             Swal.fire({
                                 title: 'Hình như có lỗi gì đó nha !',
-                                animation: false,
-                                customClass: {
-                                    popup: 'animated swing'
-                                }
                             });
                         } else {
                             topRightNotifications(
@@ -93,10 +85,6 @@ $(document).ready(function () {
             Swal.fire({
                 title: 'Hãy chọn ít nhất 1 bản ghi để mà thao tác nha !',
                 type: "info",
-                animation: false,
-                customClass: {
-                    popup: 'animated tada',
-                }
             });
         } else {
             Swal.fire({
@@ -108,10 +96,6 @@ $(document).ready(function () {
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ừm!',
                 cancelButtonText: 'Không, mình ấn nhầm',
-                animation: false,
-                customClass: {
-                    popup: 'animated tada'
-                }
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
@@ -125,10 +109,6 @@ $(document).ready(function () {
                             if (data.status == 'false') {
                                 Swal.fire({
                                     title: 'Hình như có lỗi gì đó nha !',
-                                    animation: false,
-                                    customClass: {
-                                        popup: 'animated swing'
-                                    }
                                 });
                             } else {
                                 var er = data.errors;
@@ -155,10 +135,6 @@ function ErrorNotifications(errorTitle, errorContent) {
         type: 'error',
         title: errorTitle,
         text: errorContent,
-        animation: false,
-        customClass: {
-            popup: `animated tada`,
-        }
     });
 }
 

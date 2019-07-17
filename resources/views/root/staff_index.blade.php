@@ -32,10 +32,6 @@
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ừm!',
                 cancelButtonText: 'Không, mình ấn nhầm',
-                animation: false,
-                customClass: {
-                    popup: 'animated tada'
-                }
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
@@ -51,10 +47,6 @@
                             if (data.status == 'failed') {
                                 Swal.fire({
                                     title: 'Oppps! Hình như có lỗi mất rồi !',
-                                    animation: false,
-                                    customClass: {
-                                        popup: 'animated swing'
-                                    }
                                 });
                             } else {
                                 topRightNotifications('Xoá thành công!');
@@ -81,10 +73,6 @@
                 Swal.fire({
                     title: 'Hãy chọn ít nhất 1 bản ghi để mà thao tác nha !',
                     type: "info",
-                    animation: false,
-                    customClass: {
-                        popup: 'animated tada',
-                    }
                 });
             } else {
                 Swal.fire({
@@ -96,10 +84,6 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Ừm!',
                     cancelButtonText: 'Không, mình ấn nhầm',
-                    animation: false,
-                    customClass: {
-                        popup: 'animated tada'
-                    }
                 }).then((result) => {
                     if (result.value) {
                         $.ajax({
@@ -114,10 +98,6 @@
                                 if (data.status == 'failed') {
                                     Swal.fire({
                                         title: 'Oppps! Hình như có lỗi mất rồi !',
-                                        animation: false,
-                                        customClass: {
-                                            popup: 'animated swing'
-                                        }
                                     });
                                 } else {
                                     var er = data.errors;
@@ -158,10 +138,6 @@
                 title: `Nhắc nhẹ !!`,
                 text: `Bạn có muốn xuất danh sách toàn bộ nhân viên này hơm`,
                 type: 'question',
-                animation: false,
-                customClass: {
-                    popup: `animated rubberBand`,
-                },
                 showCancelButton: true,
                 confirmButtonColor: '#5ada0d',
                 cancelButtonColor: '#f31d1d',

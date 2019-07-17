@@ -29,7 +29,7 @@ class ExportController extends Controller
                 'errorMsg' => 'Phòng này chưa có nhân viên cậu ei.',
             ]);
         }
-        return Excel::download(new Export(1, null), 'danh-sach-nhan-vien.xlsx');
+        return Excel::download(new Export(1, null, null), 'danh-sach-nhan-vien.xlsx');
     }
 
     /**
@@ -49,6 +49,10 @@ class ExportController extends Controller
                 'errorMsg' => 'Phòng này chưa có nhân viên cậu ei.',
             ]);
         }
-        return Excel::download(new Export(2, $department), 'danh sách nhân viên phòng ' . $department->name . '.xlsx');
+        $manage = $department->users(auth()->user()->id)->first();
+        if ($manage->pivot->permission == 1) {
+            return Excel::download(new Export(2, $department, 1), 'danh sách nhân viên phòng ' . $department->name . '.xlsx');
+        }
+        return Excel::download(new Export(2, $department, 0), 'danh sách nhân viên phòng ' . $department->name . '.xlsx');
     }
 }

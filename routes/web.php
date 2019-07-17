@@ -36,6 +36,8 @@ Route::group(['namespace' => 'User'], function () {
     Route::get('profile/{user}','RootController@show');
     Route::post('updateNameAddressBirthdayAndPhone', 'RootController@updateNameAddressBirthdayAndPhone')->name('updateNameAddressBirthdayAndPhone');
     Route::post('updateAvatar', 'RootController@updateAvatar')->name('updateAvatar');
+    Route::post('addToDepartment', 'RootController@addToDepartment')->name('addToDepartment');
+    Route::post('kichOutFromDepartment', 'RootController@kichOutFromDepartment')->name('kichOutFromDepartment');
 });
 
 Route::group(['namespace' => 'Department'], function () {
