@@ -38,6 +38,7 @@ $(document).ready(function () {
     // Khôi phục mật khẩu 1 nhân viên
     $(document).on('click', '._resetPassword', function (e) {
         e.preventDefault();
+        var thisBtn = $(this);
         var id = $(this).attr('data-id');
         Swal.fire({
             title: 'Nhắc nhẹ?',
@@ -63,8 +64,9 @@ $(document).ready(function () {
                                 title: 'Hình như có lỗi gì đó nha !',
                             });
                         } else {
-                            topRightNotifications(
-                                'Đã gửi mail đến người dùng có id = ' + id);
+                            var htmlStr = `<span style="color: #ff2e2e; text-shadow: 0px 0px 10px #ff3737eb;"><i class="fas fa-exclamation-circle"></i>&nbsp;Reset mật khẩu</span>`;
+                            thisBtn.parent().parent().parent().parent().children('td[role="status"]').html(htmlStr);
+                            topRightNotifications('Đã gửi mail đến người dùng có id = ' + id);
                         }
                     }
                 });
@@ -113,12 +115,13 @@ $(document).ready(function () {
                             } else {
                                 var er = data.errors;
                                 if (er.length == 0) {
-                                    topRightNotifications(
-                                        'Đã gửi mail đến người dùng');
+                                    topRightNotifications('Đã gửi mail đến người dùng');
                                 } else {
-                                    topRightNotifications(
-                                        'Đã gửi mail đến người dùng! Nhưng có lỗi khi gửi đến các người dùng : ' +
-                                        er.toString());
+                                    var htmlStr = `<span style="color: #ff2e2e; text-shadow: 0px 0px 10px #ff3737eb;"><i class="fas fa-exclamation-circle"></i>&nbsp;Reset mật khẩu</span>`;
+                                    $.each($('.chkbox:checked'), function () {
+                                        console.log($(this).parent().parent().parent().children('td[role="status"]').html(htmlStr));
+                                    });
+                                    topRightNotifications('Đã gửi mail đến người dùng! Nhưng có lỗi khi gửi đến các người dùng : ' + er.toString());
                                 }
                             }
                         }

@@ -39,8 +39,8 @@
                     <td>
                         {{ $staff->name ?? 'Chưa cập nhật tên' }}
                     </td>
-                    <td>
-                        {{ $staff->logged_flag == -1 ? 'Reset mật khẩu' : ($staff->logged_flag === 0 ? 'Chưa đăng nhập' : 'tích xanh') }}
+                    <td role="status">
+                        {!! $staff->logged_flag == -1 ? '<span style="color: #ff2e2e; text-shadow: 0px 0px 10px #ff3737eb;"><i class="fas fa-exclamation-circle"></i>&nbsp;Reset mật khẩu</span>' : ($staff->logged_flag === 0 ? '<span style="color: #ffa243; text-shadow: 0px 0px 10px #ffa243eb;"><i class="fas fa-exclamation-circle"></i>&nbsp;Chưa đăng nhập</span>' : '<span style="color: #00ff00; text-shadow: 0px 0px 10px #46ff46c7;"><i class="fas fa-user-check    "></i>&nbsp;Bình thường</span>') !!}
                     </td>
                     <td>
                         {{ $staff->username }}

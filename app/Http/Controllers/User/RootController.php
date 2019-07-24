@@ -51,7 +51,7 @@ class RootController extends Controller
                     $passwordReset->delete();
                     return view('errors.tokenTimeOut');
                 }
-                return view('components.changePass', ['status' => -1, 'token' => $passwordReset->token]);
+                return view('components.changePass', ['status' => -1, 'token' => $passwordReset->token])->withErrors(['errorMsg' => 'Vui lòng cập nhật lại mật khẩu!']);
             } else {
                 return view('errors.tokenTimeOut');
             }
@@ -755,8 +755,9 @@ class RootController extends Controller
 
         // Nếu tạo thành công token
         if ($passwordReset) {
-            // set trạng thái đăng nhập về -1 -reset pass
+            // set trạng thái đăng nhập về -1 -reset pass và đăng xuất
             $user->logged_flag = -1;
+            $user->logout = true;
             $user->save();
             // Gửi mail đến user
             Mail::to($user->email, $user->name)

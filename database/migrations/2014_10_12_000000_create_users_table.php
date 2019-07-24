@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('city')->nullable();
             $table->string('image')->nullable();
             $table->string('phone',20)->nullable();
+            $table->boolean('logout')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

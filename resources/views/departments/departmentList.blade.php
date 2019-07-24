@@ -28,7 +28,7 @@
                         @endif
                     </div>
                     <div class="more-info">
-                        <h1>{{ $depart->name }}</h1>
+                        <a href="/department/{{ $depart->id }}"><h1>{{ $depart->name }}</h1></a>
                         <div class="coords">
                             <span>Quản lý: </span>
                             @if($depart->users()->where('permission', 1)->count() == 0)
