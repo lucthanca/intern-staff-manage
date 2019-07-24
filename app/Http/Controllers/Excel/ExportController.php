@@ -49,7 +49,7 @@ class ExportController extends Controller
                 'errorMsg' => 'Phòng này chưa có nhân viên cậu ei.',
             ]);
         }
-        $manage = $department->users(auth()->user()->id)->first();
+        $manage = $department->users()->find(auth()->user()->id);
         if ($manage->pivot->permission == 1 || auth()->user()->role == 1) {
             return Excel::download(new Export(2, $department, 1), 'danh sách nhân viên phòng ' . $department->name . '.xlsx');
         }

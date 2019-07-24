@@ -36,8 +36,8 @@ function convert_vi_to_en($str)
     //$str = str_replace(" ", "-", str_replace("&*#39;","",$str));
     return $str;
 }
-for ($i = 1; $i <= 100; $i++) {
-
+for ($i = 1; $i <= 10; $i++) {
+	$date = date('Y-m-d H:i:s', time());
     $rand_fn = array_rand($firstName, 1);
     $rand_mn = array_rand($middleName, 1);
     $rand_ln = array_rand($lastName, 1);
@@ -50,7 +50,7 @@ for ($i = 1; $i <= 100; $i++) {
     $city = $diaChi[array_rand($diaChi, 1)];
     $phone = '0' . getPhoneNum() . getPhoneNum() . getPhoneNum() . getPhoneNum() . getPhoneNum() . getPhoneNum() . getPhoneNum() . getPhoneNum() . getPhoneNum();
 
-    $insertQuery = "INSERT INTO users (`id`, `username`, `email`, `password`, `logged_flag`, `role`, `name`, `birthday`, `address`, `city`, `image`, `phone`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, '$username', '$email', '$password', '0', '0', '$name', NULL, NULL, '$city', NULL, '$phone', NULL, NULL, NULL, NULL)";
+    $insertQuery = "INSERT INTO users (`id`, `username`, `email`, `password`, `logged_flag`, `role`, `name`, `birthday`, `address`, `city`, `image`, `phone`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, '$username', '$email', '$password', '1', '0', '$name', NULL, NULL, '$city', NULL, '$phone', NULL, '$date', NULL, NULL)";
     mysqli_query($connect, "set NAMES 'utf8'");
     $result =  mysqli_query($connect, $insertQuery);
     if ($result) {

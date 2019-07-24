@@ -12,8 +12,10 @@
                 @endif
                 <th scope="col">#</th>
                 <th scope="col">Tên</th>
-                <th scope="col">Tài khoản</th>
-                <th scope="col">Email</th>
+                @if (auth()->user()->role == 1 || $department->users()->find(auth()->user()->id)->pivot->permission == 1)
+                    <th scope="col">Tài khoản</th>
+                    <th scope="col">Email</th>
+                @endif
                 <th scope="dol">Chức vụ</th>
                 <th scope="col"></th>
             </tr>
@@ -37,12 +39,14 @@
                     <td>
                         {{ $staff->name ?? 'Chưa cập nhật tên' }}
                     </td>
-                    <td>
-                        {{ $staff->username }}
-                    </td>
-                    <td>
-                        {{ $staff->email }}
-                    </td>
+                    @if (auth()->user()->role == 1 || $department->users()->find(auth()->user()->id)->pivot->permission == 1)
+                        <td>
+                            {{ $staff->username }}
+                        </td>
+                        <td>
+                            {{ $staff->email }}
+                        </td>
+                    @endif
                     <td role="permission" title="{{ $staff->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên' }}">
                         {{ $staff->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên' }}
                     </td>

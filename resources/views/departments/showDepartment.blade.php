@@ -1,5 +1,5 @@
 @extends('master')
-@section('title')Danh sách phòng ban
+@section('title')Chi tiết phòng ban - {{ $department->name }}
 @endsection
 
 @section('css')
@@ -79,6 +79,16 @@
         text-align: center;
         margin-top: 15px;
     }
+    .ct-page-title {
+        margin-bottom: 1.5rem;
+        padding-left: 1.25rem;
+        border-left: 2px solid #5e72e4;
+    }
+
+    .box-title .title {
+        font-size: 1.25rem;
+        color: #979fa7;
+    }
 </style>
 @endsection
 
@@ -86,8 +96,24 @@
 
 <!-- Dark table -->
 <div class="container-fluid mt-3">
-
-    <div class="row">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card bg-secondary shadow">
+                <div class="ct-page-title ml-3 mt-3">
+                    <h1 class="ct-title" id="content">Thông tin phòng ban</h1>
+                </div>
+                <div class="d-flex">
+                    <div class="col-md-12 col-lg-6" style="text-align: center;">
+                        <span>Tên phòng: </span><strong><h1 role="department-name" style="font-size: 2rem;">{{ $department->name }}</h1></strong>
+                    </div>
+                    <div class="col-md-12 col-lg-6" style="text-align: center;">
+                        <span>Ngày tạo: </span><strong><h1 role="department-name" style="font-size: 2rem;">{{ $department->created_at->isoFormat('DD-MM-YYYY') }}</h1></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
         @if(auth()->user()->role === 1)
         <div class="col">
             <a href="javascript:void(0);" class="btn btn-outline-primary _show_modal_add_staff_to_department" data-toggle="modal" data-target="#_add_staff_to_department_modal"><i class="fas fa-plus-circle"></i> Thêm nhân viên</a>

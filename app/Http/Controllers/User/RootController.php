@@ -56,7 +56,13 @@ class RootController extends Controller
                 return view('errors.tokenTimeOut');
             }
         } else {
-            return view('root.index');
+            if (auth()->user()->role != 1) {
+                $user = User::find(auth()->user()->id);
+                return view('root.index', compact('user'));
+            }
+            $users = User::all();
+            $departments = Department::all();
+            return view('root.index', compact('users', 'departments'));
         }
     }
 
@@ -754,7 +760,7 @@ class RootController extends Controller
             $user->save();
             // Gửi mail đến user
             Mail::to($user->email, $user->name)
-                ->send(new ResetPasswordMail($user, $passwordReset->token));
+                ->send(new ResetPasswordMail($user, $passwordReset->token, null));
             // Trả kq 
             return 1;
         }

@@ -13,6 +13,7 @@
                 </th>
                 <th scope="col">#</th>
                 <th scope="col">Tên</th>
+                <th scope="col">Trạng thái</th>
                 <th scope="col">Tài khoản</th>
                 <th scope="col">Email</th>
                 <th scope="col">Phòng ban</th>
@@ -37,6 +38,9 @@
                     </td>
                     <td>
                         {{ $staff->name ?? 'Chưa cập nhật tên' }}
+                    </td>
+                    <td>
+                        {{ $staff->logged_flag == -1 ? 'Reset mật khẩu' : ($staff->logged_flag === 0 ? 'Chưa đăng nhập' : 'tích xanh') }}
                     </td>
                     <td>
                         {{ $staff->username }}

@@ -65,28 +65,20 @@ class Export extends Model implements FromCollection, WithHeadings, WithEvents, 
                 }
             } else {
                 foreach ($staffs as $row) {
-                    if ($row->pivot->permission != 1) {
-                        $staff[] = array(
-                            '0' => $row->id,
-                            '1' => $row->username,
-                            '2' => $row->email,
-                            '3' => $row->name,
-                            '4' => $row->birthday,
-                            '5' => $row->address,
-                            '6' => $row->city,
-                            '7' => $row->phone,
-                            '8' => $this->type == 1 ? $row->created_at : $row->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên',
-                        );
-                    }
+                    $staff[] = array(
+                        '0' => $row->id,
+                        '3' => $row->name,
+                        '8' => $this->type == 1 ? $row->created_at : $row->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên',
+                    );
                 }
             }
+            return (collect($staff));
         }
-        return (collect($staff));
     }
 
     public function headings(): array
     {
-        return [
+        return $this->type == 1 || $this->permission == 1 ? [
             'ID',
             'Tài khoản',
             'Email',
@@ -95,6 +87,10 @@ class Export extends Model implements FromCollection, WithHeadings, WithEvents, 
             'Địa chỉ',
             'Thành phố',
             'Số điện thoại',
+            $this->type == 1 ? 'Ngày tạo' : 'Chức vụ',
+        ] : [
+            'ID',
+            'Tên',
             $this->type == 1 ? 'Ngày tạo' : 'Chức vụ',
         ];
     }

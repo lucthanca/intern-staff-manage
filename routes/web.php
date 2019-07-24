@@ -63,4 +63,10 @@ Route::group(['namespace' => 'Excel'], function () {
     Route::get('exportStaffFromDepartment/{department}', 'ExportController@exportStaffFromDepartment')->name('exportStaffFromDepartment');
 });
 
+Route::group(['namespace' => 'Auth'], function () {
+    Route::get('forgot-password','ForgotPasswordController@index');
+    Route::get('send-reset-password-mail','ForgotPasswordController@sendResetPasswordMail')->name('send-reset-password-mail');
+    Route::get('reset-pass/{token}', 'ForgotPasswordController@showFormResetPassword');
+});
+
 Route::get('/home', 'HomeController@index')->name('home');

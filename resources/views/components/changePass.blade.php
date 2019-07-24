@@ -1,5 +1,6 @@
 @extends('master')
-
+@section('title')Khôi phục mật khẩu
+@endsection
 @section('content')
 
 <!-- Navbar -->
@@ -77,15 +78,15 @@
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-6">
                     @if(Auth::user() && Auth::user()->role != 1)
-                    <h1 class="text-white py-sm-5">Xin chào - {{ auth()->user()->name }}</h1>
+                        <h1 class="text-white py-sm-5">Xin chào - {{ auth()->user()->name }}</h1>
                     @if($status == 0)
-                    <p class="text-lead text-light">Lần đầu đăng nhập, bạn hãy vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
+                        <p class="text-lead text-light">Lần đầu đăng nhập, bạn hãy vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
                     @else
-                    <p class="text-lead text-light">Bạn có yêu cầu khôi phục mật khẩu từ root, vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
+                        <p class="text-lead text-light">Bạn có yêu cầu khôi phục mật khẩu từ root, vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
                     @endif
                     @else
-                    <h1 class="text-white py-3">Xin chào bạn nhaaaaaa!</h1>
-                    <p class="text-lead text-light py-5">Bạn có yêu cầu khôi phục mật khẩu từ root, vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
+                        <h1 class="text-white py-3">Xin chào bạn nhaaaaaa!</h1>
+                        <p class="text-lead text-light py-5">Bạn có yêu cầu khôi phục mật khẩu từ root, vui lòng cập nhật lại mật khẩu của bạn để có thể sử dụng phun chức năng.</p>
                     @endif
                 </div>
             </div>

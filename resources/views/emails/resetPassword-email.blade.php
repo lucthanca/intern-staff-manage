@@ -397,7 +397,7 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-5 col-md-6" style="margin-top: 15px;">
                             <h1 class="text-white">Xin chào <strong>{{ $user->name ?? null}}</strong> !</h1>
-                            <p style="color: #ced4da !important;">Bạn có một yêu cầu cập nhật lại mật khẩu bởi root.</p>
+                            <p style="color: #ced4da !important;">{{ $type ? 'Tài khoản của bạn vừa có yêu cầu khôi phục mật khẩu, nếu bạn không làm điều đó thì hãy bỏ qua email này!' : 'Bạn có một yêu cầu cập nhật lại mật khẩu bởi root.' }}</p>
                             <a href="{{ asset('/reset-password/'.$token) }}" class="large green button">Truy cập</a>
                             <p style="color: #ced4da !important;margin-top: 15px;">Hoặc bạn có thể copy đường dẫn này lên trình duyệt</p>
                             <p style="color: #ced4da !important;color:#fff !important;">{{ asset('/reset-password/'.$token) }}</p>
