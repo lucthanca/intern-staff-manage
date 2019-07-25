@@ -18,7 +18,6 @@ $(document).ready(function () {
     //
     // chọn tất cả **************
     $(document).on('change', '#checkboxAll', function () {
-        console.log(1);
         if ($(this).is(':checked')) {
             $.each($('.chkbox'), function () {
                 $(this).prop('checked', true);
@@ -27,6 +26,15 @@ $(document).ready(function () {
             $.each($('.chkbox'), function () {
                 $(this).prop('checked', false);
             });
+        }
+    });
+    // listen checkbox change
+    $(document).on('change', '.chkbox', function () {
+        if ($(this).is(':checked')) {
+            var id = $(this).attr('data-id');
+            $.post(route('pushToIdSession'), {id: id});
+        } else {
+            console.log('unchecked');
         }
     });
 

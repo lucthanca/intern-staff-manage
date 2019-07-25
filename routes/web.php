@@ -38,6 +38,8 @@ Route::group(['namespace' => 'User'], function () {
     Route::post('updateAvatar', 'RootController@updateAvatar')->name('updateAvatar');
     Route::post('addToDepartment', 'RootController@addToDepartment')->name('addToDepartment');
     Route::post('kichOutFromDepartment', 'RootController@kichOutFromDepartment')->name('kichOutFromDepartment');
+
+    Route::post('pushToIdSession', 'RootController@pushToIdSession')->name('pushToIdSession');
 });
 
 Route::group(['namespace' => 'Department'], function () {

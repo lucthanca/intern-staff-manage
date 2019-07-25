@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Department;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 
 class RootController extends Controller
 {
@@ -431,7 +432,7 @@ class RootController extends Controller
                     'image' => $imageArray['image'] ?? null,
                     'phone' => $data['phone'],
                 ]);
-                return redirect('/edit / '.$user->id);
+                return redirect('/edit / ' . $user->id);
             }
             return redirect()->back()->withErrors([
                 'errorMsg' => 'Xin lỗi, bạn không có quyền làm chuyện này đâu nhé! Hi...',
@@ -852,5 +853,20 @@ class RootController extends Controller
             'status' => 404,
             'errorMsg' => 'Không tìm thấy nhân viên hoặc phòng ban này',
         ]);
+    }
+
+    /**
+     * Đẩy 1 id vào session id
+     * @param userid
+     * @return none
+     */
+    public function pushToIdSession()
+    {
+        $oldSession = Session::has('users') ? Session::get('users') : [];
+        if (!array_key_exists(request()->id, $oldSession)) {
+            array_push($oldSession, request()->id);
+        }
+        request()->session()->push('users', $oldSession);
+        dd(Session::get('users'));
     }
 }
