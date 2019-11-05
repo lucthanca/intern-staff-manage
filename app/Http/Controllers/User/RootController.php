@@ -257,10 +257,14 @@ class RootController extends Controller
             if ($user) {
                 // Thêm vào phòng ban
                 // Nếu có phòng ban được chọn
-                foreach ($ids as $id) {
-                    $user->departments()->attach($id, ['permission' => 0]);
+                
+                if ($ids !== null) {
+                    foreach ($ids as $id) {
+                        $user->departments()->attach($id, ['permission' => 0]);
+                    }
                 }
-                $password = request()->password;;
+                $password = request()->password;
+                ;
                 Mail::to($user->email)->send(new NewStaff($password, $user));
                 return redirect('/staff');
             }
@@ -301,10 +305,11 @@ class RootController extends Controller
                             $flag++;
                         }
                     }
-                } else
+                } else {
                     return redirect()->back()->withErrors([
                         'errorMsg' => 'Bạn không được phép xemn người này!',
                     ]);
+                }
             }
             // kiểm tra biến cờ
             if ($flag > 0) {
@@ -331,8 +336,9 @@ class RootController extends Controller
         if (auth()->user()->logged_flag == 0) {
             return view('components.changePass', ['status' => 0]);
         }
-        if (auth()->user()->role == 1 || auth()->user()->id == $user->id)
+        if (auth()->user()->role == 1 || auth()->user()->id == $user->id) {
             return view('root.edit', compact('user', 'userDepartments'));
+        }
         return redirect()->back()->withErrors([
             'errorMsg' => 'Bạn không có quyền chỉnh sửa người này đâuuuuuu!',
         ]);
@@ -360,7 +366,6 @@ class RootController extends Controller
                     $imageArray = ['image' => $imagePath];
                 }
                 if (auth()->user()->role == 1) {
-
                     $data = request()->validate(
                         [
                             'username' => ['required', 'string', 'max:32', 'unique:users,username,' . request()->id, 'min:3'],
@@ -569,7 +574,7 @@ class RootController extends Controller
      */
     public function updateAvatar()
     {
-        // Tìmnguowfi dùng có id 
+        // Tìmnguowfi dùng có id
         $user = User::find(request()->id);
         if (auth()->user()->role != 1 && auth()->user()->id != $user->id) {
             return redirect()->back()->withErrors([
@@ -619,18 +624,20 @@ class RootController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $user)
-    { }
+    {
+    }
 
     public function deleteA()
     {
         $user = User::find(request('id'));
         if ($user) {
-            if ($user->delete())
+            if ($user->delete()) {
                 return response()->json([
                     'status' => 'success',
                     // Đẩy page về view
                     'page' => request('page'),
                 ]);
+            }
             return response()->json([
                 'status' => 'failed',
                 // Đẩy page về view
@@ -675,8 +682,9 @@ class RootController extends Controller
     // Hàm xoá nhân viên
     public function deleteUser($user)
     {
-        if ($user->delete())
+        if ($user->delete()) {
             return 1;
+        }
         return 0;
     }
 
@@ -763,7 +771,7 @@ class RootController extends Controller
             // Gửi mail đến user
             Mail::to($user->email, $user->name)
                 ->send(new ResetPasswordMail($user, $passwordReset->token, null));
-            // Trả kq 
+            // Trả kq
             return 1;
         }
         return $user->id;
@@ -804,7 +812,7 @@ class RootController extends Controller
                     'status' => 500,
                     'errorMsg' => count(request()->ids) > 1 ? 'Nhân viên này đều đã ở trong các phòng ban này ròi!' : 'Nhân viên này đã ở trong phòng ban này rồi!',
                 ]);
-            } else if (count($error) > 0) {
+            } elseif (count($error) > 0) {
                 return response()->json([
                     'status' => 201,
                     'data' => $error,

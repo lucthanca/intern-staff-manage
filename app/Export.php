@@ -31,10 +31,10 @@ class Export extends Model implements FromCollection, WithHeadings, WithEvents, 
 
     public function collection()
     {
-        $this->type == 1 ? $staffs = User::all() : $staffs = $this->department->users;
-        if ($this->type == 1) {
+        $this->type == ALL_STAFF ? $staffs = User::all() : $staffs = $this->department->users;
+        if ($this->type == ALL_STAFF) {
             foreach ($staffs as $row) {
-                if ($row->role != 1) {
+                if ($row->role != IS_ROOT) {
                     $staff[] = array(
                         '0' => $row->id,
                         '1' => $row->username,
@@ -44,12 +44,13 @@ class Export extends Model implements FromCollection, WithHeadings, WithEvents, 
                         '5' => $row->address,
                         '6' => $row->city,
                         '7' => $row->phone,
-                        '8' => $this->type == 1 ? $row->created_at : $row->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên',
+                        '8' => $row->created_at
+                        //'8' => $this->type == ALL_STAFF ? $row->created_at : $row->pivot->permission == IS_MANAGER ? 'Quản lý' : 'Nhân viên',
                     );
                 }
             }
         } else {
-            if ($this->permission == 1) {
+            if ($this->permission == IS_MANAGER) {
                 foreach ($staffs as $row) {
                     $staff[] = array(
                         '0' => $row->id,
@@ -60,7 +61,8 @@ class Export extends Model implements FromCollection, WithHeadings, WithEvents, 
                         '5' => $row->address,
                         '6' => $row->city,
                         '7' => $row->phone,
-                        '8' => $this->type == 1 ? $row->created_at : $row->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên',
+                        '8' => $row->pivot->permission == IS_MANAGER ? 'Quản lý' : 'Nhân viên',
+                        //'8' => $this->type == ALL_STAFF ? $row->created_at : $row->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên',
                     );
                 }
             } else {
@@ -68,17 +70,18 @@ class Export extends Model implements FromCollection, WithHeadings, WithEvents, 
                     $staff[] = array(
                         '0' => $row->id,
                         '3' => $row->name,
-                        '8' => $this->type == 1 ? $row->created_at : $row->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên',
+                        '8' => $row->pivot->permission == IS_MANAGER ? 'Quản lý' : 'Nhân viên',
+                        //'8' => $this->type == ALL_STAFF ? $row->created_at : $row->pivot->permission == 1 ? 'Quản lý' : 'Nhân viên',
                     );
                 }
             }
-            return (collect($staff));
         }
+        return (collect($staff));
     }
 
     public function headings(): array
     {
-        return $this->type == 1 || $this->permission == 1 ? [
+        return $this->type == ALL_STAFF || $this->permission == IS_MANAGER ? [
             'ID',
             'Tài khoản',
             'Email',
@@ -87,11 +90,12 @@ class Export extends Model implements FromCollection, WithHeadings, WithEvents, 
             'Địa chỉ',
             'Thành phố',
             'Số điện thoại',
-            $this->type == 1 ? 'Ngày tạo' : 'Chức vụ',
+            $this->type == ALL_STAFF ? 'Ngày tạo' : 'Chức vụ',
         ] : [
             'ID',
             'Tên',
-            $this->type == 1 ? 'Ngày tạo' : 'Chức vụ',
+            'Chức vụ',
+            //$this->type == ALL_STAFF ? 'Ngày tạo' : 'Chức vụ',
         ];
     }
 }
