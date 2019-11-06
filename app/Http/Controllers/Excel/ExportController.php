@@ -56,9 +56,10 @@ class ExportController extends Controller
             ]);
         }
         $manage = $department->users()->find(auth()->user()->id);
-        if ($manage->pivot->permission == IS_MANAGER || auth()->user()->role == IS_ROOT) {
-            return Excel::download(new Export(IN_DEPARTMENT, $department, IS_ROOT), 'danh sách nhân viên phòng ' . $department->name . '.xlsx');
-        }
+        if($manage)
+            if ($manage->pivot->permission == IS_MANAGER || auth()->user()->role == IS_ROOT) {
+                return Excel::download(new Export(IN_DEPARTMENT, $department, IS_ROOT), 'danh sách nhân viên phòng ' . $department->name . '.xlsx');
+            }
         return Excel::download(new Export(IN_DEPARTMENT, $department, IS_STAFF), 'danh sách nhân viên phòng ' . $department->name . '.xlsx');
     }
 }
